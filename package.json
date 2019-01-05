@@ -1,0 +1,12 @@
+{
+    "name": "clanRaaDiscordBot",
+    "version": "1.0.0",
+    "description": "Discordbotten over alle andre",
+    "main": "run.js",
+    "dependencies": {
+        "command-line-args": "^5.0.2",
+        "discord.js": "^11.4.2",
+        "lodash": "^4.17.11"
+    },
+    "author": "Bubber"
+}
