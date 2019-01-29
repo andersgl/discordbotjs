@@ -10,7 +10,7 @@ class Bot {
     constructor(config = {}) {
         this.baseDir = './bot/'
         this.config = config
-
+        this.disabledCmds = Array.isArray(config.disabledCmds) ? config.disabledCmds : []
         this.loadCommands()
     }
 
@@ -34,14 +34,21 @@ class Bot {
 
             const message = new Message(msg, new User(msg.author, this.config.admins))
 
+            // Admin commands
+            let matches = null
             if (message.content === '!updatethebot') {
                 this.restart(message)
-            } else if(false) {
-
+            } else if (matches = msg.content.match(/^\!enable\s([a-zA-Z0-9æøåÆØÅ]+)/i)) {
+                this.enableCmd(matches[1], message)
+            } else if (matches = msg.content.match(/^\!disable\s([a-zA-Z0-9æøåÆØÅ]+)/i)) {
+                this.disableCmd(matches[1], message)
             }
 
             if (message.isCommand() && this.triggers[message.trigger] !== undefined) {
-                const result = this.commands[this.triggers[message.trigger]].process(message)
+                if (this.disabledCmds.indexOf(this.triggers[message.trigger]) >= 0) {
+                    return // Command is disabled
+                }
+                this.commands[this.triggers[message.trigger]].process(message)
             } else {
                 // Other for lolz stuff?
             }  
@@ -79,6 +86,29 @@ class Bot {
                 this.triggers[trigger] = dir
             })
         })
+    }
+
+    disableCmd(cmd, message) {
+        if (!message.user.admin) {
+            message.respond('Sorry, admins only')
+            return
+        }
+        if (this.disabledCmds.indexOf(cmd) === -1) {
+            message.respond('Disabled command: ' + cmd)
+            this.disabledCmds.push(cmd)
+        }
+    }
+
+    enableCmd(cmd, message) {
+        if (!message.user.admin) {
+            message.respond('Sorry, admins only')
+            return
+        }
+        const index = this.disabledCmds.indexOf(cmd)
+        if (index >= 0) {
+            message.respond('Enabled command: ' + cmd)
+            this.disabledCmds.splice(index, 1)
+        }
     }
 
 }
