@@ -1,6 +1,8 @@
 class Message {
-    constructor(msg) {
+    constructor(msg, user) {
         this.msg = msg
+        this.user = user
+        this.content = msg.content
         this.trigger = null
         this.action = null
         this.args = []

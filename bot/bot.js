@@ -2,7 +2,9 @@ const Discord = require('discord.js')
 const _ = require('lodash/string')
 const fs = require('fs')
 const path = require('path')
+const shell = require('shelljs')
 const Message = require('./message')
+const User = require('./user')
 
 class Bot {
     constructor(config = {}) {
@@ -10,7 +12,6 @@ class Bot {
         this.config = config
 
         this.loadCommands()
-        // this.connect()
     }
 
     connect() {
@@ -18,6 +19,11 @@ class Bot {
 
         this.client.on('ready', () => {
             console.log(`Logged in as ${this.client.user.tag}!`)
+            this.client.channels.first().guild.channels
+                .filter(channel => channel.type === 'text')
+                .forEach(channel => {
+                    channel.send('Hej, nu er jeg her igen!')
+            })
         });
 
         this.client.on('message', msg => {
@@ -26,7 +32,14 @@ class Bot {
                 return
             }
 
-            const message = new Message(msg)
+            const message = new Message(msg, new User(msg.author, this.config.admins))
+
+            if (message.content === '!updatethebot') {
+                this.restart(message)
+            } else if(false) {
+
+            }
+
             if (message.isCommand() && this.triggers[message.trigger] !== undefined) {
                 const result = this.commands[this.triggers[message.trigger]].process(message)
             } else {
@@ -35,6 +48,15 @@ class Bot {
         })
 
         this.client.login(this.config.token)
+    }
+
+    restart(message) {
+        if (!message.user.admin) {
+            message.respond('Sorry, admins only')
+            return
+        }
+        message.respond('Restarting, be right back ...')
+        shell.exec('./update.sh')
     }
 
     loadCommands() {
