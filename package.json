@@ -11,5 +11,9 @@
         "pm2": "^3.2.9",
         "shelljs": "^0.8.3"
     },
+    "scripts": {
+        "start": "./node_modules/pm2/bin/pm2 start run.js --name=discordbotjs",
+        "stop": "./node_modules/pm2/bin/pm2 stop discordbotjs"
+    },
     "author": "Bubber"
 }
