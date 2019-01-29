@@ -5,6 +5,7 @@ const path = require('path')
 const shell = require('shelljs')
 const Message = require('./message')
 const User = require('./user')
+const Lolz = require('./lolz')
 
 class Bot {
     constructor(config = {}) {
@@ -12,6 +13,7 @@ class Bot {
         this.config = config
         this.disabledCmds = Array.isArray(config.disabledCmds) ? config.disabledCmds : []
         this.loadCommands()
+        this.lolz = new Lolz()
     }
 
     connect() {
@@ -51,6 +53,7 @@ class Bot {
                 this.commands[this.triggers[message.trigger]].process(message)
             } else {
                 // Other for lolz stuff?
+                this.lolz.message(message)
             }  
         })
 
