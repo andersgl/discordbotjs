@@ -3,4 +3,4 @@
 
 git pull
 npm install
-./node_modules/pm2/bin/pm2 restart discordbotjs
+npm restart
