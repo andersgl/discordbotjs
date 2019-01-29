@@ -63,7 +63,9 @@ class Bot {
             return
         }
         message.respond('Restarting, be right back ...')
-        shell.exec('./update.sh')
+        setTimeout(() => {
+            shell.exec('./update.sh')
+        }, 1000)
     }
 
     loadCommands() {
