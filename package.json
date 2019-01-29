@@ -6,7 +6,10 @@
     "dependencies": {
         "command-line-args": "^5.0.2",
         "discord.js": "^11.4.2",
-        "lodash": "^4.17.11"
+        "dotenv": "^6.2.0",
+        "lodash": "^4.17.11",
+        "pm2": "^3.2.9",
+        "shelljs": "^0.8.3"
     },
     "author": "Bubber"
 }
