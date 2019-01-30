@@ -6,6 +6,6 @@
 
 ## Usage
 * Now you can run these commands:
- * `mpm start`
+ * `npm start`
  * `npm stop`
  * `npm restart`
