@@ -45,6 +45,9 @@ class Prac extends Command {
             case 'remove':
                 this.remove((msg.args.length > 0 ? msg.args[0] : this.config.defaultGame), msg.user)
                 break
+            case 'help':
+                msg.respond(this.showHelp())
+                break
             default:
                 if (msg.action) {
                     msg.respond(msg.action + ' - hvad mener du?')
@@ -139,6 +142,16 @@ class Prac extends Command {
 
     currentDate() {
         return moment().format('YYYYMMDD')
+    }
+
+    help() {
+        return [
+            { trigger: 'prac', description: 'vis oversigt over tilmeldinger' },
+            { trigger: 'prac yes <game?>', description: 'tilmeld dig til prac' },
+            { trigger: 'prac no <game?>', description: 'afmeld til fra prac' },
+            { trigger: 'prac remove <game?>', description: 'fjern din tilmelding' },
+            { trigger: 'prac help', description: 'vis denne hjælpebesked' },
+        ]
     }
 }
 
