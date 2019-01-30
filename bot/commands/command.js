@@ -5,6 +5,11 @@ class Command {
         this.init()
     }
 
+    setMsg(msg) {
+        this.msg = msg
+        return this
+    }
+
     triggers() {
         return []
     }
@@ -17,10 +22,6 @@ class Command {
 
     init() {
         // To be overwritten
-    }
-
-    setMsg(msg) {
-        this.msg = msg
     }
 
     process(msg) {
