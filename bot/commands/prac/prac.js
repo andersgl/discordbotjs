@@ -104,6 +104,10 @@ class Prac extends Command {
     }
 
     showSummary(game = null) {
+        if (this.noPracEntries()) {
+            this.msg.respond('Du kan stadig nå at være den første der melder sig til prac i dag')
+            return
+        }
         let summary = ''
         const pracToday = this.data[this.currentDate()]
         for (let key in pracToday) {
@@ -122,6 +126,11 @@ class Prac extends Command {
                 + '```'
         }
         this.msg.respond(summary)
+    }
+
+    noPracEntries() {
+        const curDate = this.currentDate()        
+        return this.data[curDate] === undefined || Object.keys(this.data[curDate]) === 0
     }
 
     gameIsAvailable(game) {
