@@ -45,6 +45,21 @@ class Message {
     replyTTS(text) {
         this.msg.reply(text, { tts: true })
     }
+
+    highlight2User(text) {
+        const matches = text.match(/^\<@([\d]+)\>$/)
+        if (matches) {
+            return matches[1]
+        }
+        return null
+    }
+
+    user2Highlight(userId) {
+        if (!userId) {
+            return ''
+        }
+        return '<@' + userId + '>'
+    }
 }
 
 module.exports = Message

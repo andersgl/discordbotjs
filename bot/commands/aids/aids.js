@@ -30,7 +30,7 @@ class Aids extends Command {
                     msg.respond('Hvem vil du give aids til (brug @)')
                     break
                 }
-                const toUser = this.highlight2User(msg.action)
+                const toUser = msg.highlight2User(msg.action)
                 if (!toUser) {
                     msg.respond(msg.action + ' er ikke en bruger')
                     break
@@ -53,12 +53,12 @@ class Aids extends Command {
                             return
                         }
 
-                        const userHighlight = this.highlight2User(msg.action)
+                        const userHighlight = msg.highlight2User(msg.action)
                         if (userHighlight) {
                             if (this.userHasAids(userHighlight)) {
-                                msg.respond(this.user2Highlight(userHighlight) + ' har aids!')
+                                msg.respond(msg.user2Highlight(userHighlight) + ' har aids!')
                             } else {
-                                msg.respond(this.user2Highlight(userHighlight) + ' har ikke aids')
+                                msg.respond(msg.user2Highlight(userHighlight) + ' har ikke aids')
                             }
                         } else {
                             msg.respond(msg.action + ' er ikke en bruger')
@@ -82,11 +82,11 @@ class Aids extends Command {
         }
 
         if (this.userHasAids(toUser)) {
-            return this.user2Highlight(toUser) + ' havde aids i forvejen, men fik lidt mere aids af ' + this.user2Highlight(fromUser)
+            return this.msg.user2Highlight(toUser) + ' havde aids i forvejen, men fik lidt mere aids af ' + this.msg.user2Highlight(fromUser)
         }
         this.hasAids.push(toUser)
 
-        return this.user2Highlight(fromUser) + ' har givet aids til ' + this.user2Highlight(toUser)
+        return this.msg.user2Highlight(fromUser) + ' har givet aids til ' + this.msg.user2Highlight(toUser)
     }
 
     userHasAids(userId) {
@@ -100,7 +100,7 @@ class Aids extends Command {
         } else {
             status = 'Disse brugere har aids:\n'
                 + this.hasAids.map(user => {
-                    return '- ' + (this.userNames[user] !== undefined ? this.userNames[user] : this.user2Highlight(user))
+                    return '- ' + (this.userNames[user] !== undefined ? this.userNames[user] : this.msg.user2Highlight(user))
                 }).join('\n')
         }
         return status + '\n**!aids help** for hjælp'

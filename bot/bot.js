@@ -50,7 +50,7 @@ class Bot {
                 if (this.disabledCmds.indexOf(this.triggers[message.trigger]) >= 0) {
                     return // Command is disabled
                 }
-                this.commands[this.triggers[message.trigger]].process(message)
+                this.commands[this.triggers[message.trigger]].setMsg(message).process(message)
             } else {
                 // Other for lolz stuff?
                 this.lolz.message(message)

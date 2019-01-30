@@ -1,6 +1,7 @@
 class Command {
 
     constructor() {
+        this.msg = null
         this.init()
     }
 
@@ -18,6 +19,10 @@ class Command {
         // To be overwritten
     }
 
+    setMsg(msg) {
+        this.msg = msg
+    }
+
     process(msg) {
         // To be overwritten
     }
@@ -28,25 +33,6 @@ class Command {
                 return '**!' + help.trigger + '** - ' + help.description
             }).join('\n')
             + '\n'
-    }
-
-    highlight2User(text) {
-        const matches = text.match(/^\<@([\d]+)\>$/)
-        if (matches) {
-            return matches[1]
-        }
-        return null    
-    }
-
-    user2Highlight(userId) {
-        if (!userId) {
-            return ''
-        }
-        return '<@' + userId + '>'
-    }
-
-    isUserHighlight(text) {
-        return this.highlight2User(text) !== null
     }
 }
 
