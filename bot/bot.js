@@ -62,10 +62,10 @@ class Bot {
 
     restart(message) {
         if (!message.user.admin) {
-            message.respond('Sorry, admins only')
+            message.respond('Beklager, du er ikke admin')
             return
         }
-        message.respond('Restarting, be right back ...')
+        message.respond('Genstarter lige mothafuckas ...')
         setTimeout(() => {
             shell.exec('./update.sh')
         }, 1000)
@@ -95,23 +95,23 @@ class Bot {
 
     disableCmd(cmd, message) {
         if (!message.user.admin) {
-            message.respond('Sorry, admins only')
+            message.respond('Beklager, du er ikke admin')
             return
         }
         if (this.disabledCmds.indexOf(cmd) === -1) {
-            message.respond('Disabled command: ' + cmd)
+            message.respond('Kommando slået fra: ' + cmd)
             this.disabledCmds.push(cmd)
         }
     }
 
     enableCmd(cmd, message) {
         if (!message.user.admin) {
-            message.respond('Sorry, admins only')
+            message.respond('Beklager, du er ikke admin')
             return
         }
         const index = this.disabledCmds.indexOf(cmd)
         if (index >= 0) {
-            message.respond('Enabled command: ' + cmd)
+            message.respond('Kommando slået til: ' + cmd)
             this.disabledCmds.splice(index, 1)
         }
     }
