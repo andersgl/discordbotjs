@@ -4,8 +4,42 @@ const Command = require('../command')
 
 class Prac extends Command {
 
+    help() {
+        return [
+            { trigger: 'prac', description: 'vis oversigt over tilmeldinger' },
+            { trigger: 'prac yes <game?>', description: 'tilmeld dig til prac' },
+            { trigger: 'prac no <game?>', description: 'afmeld til fra prac' },
+            { trigger: 'prac remove <game?>', description: 'fjern din tilmelding' },
+            { trigger: 'prac help', description: 'vis denne hjælpebesked' },
+        ]
+    }
+
     init() {
         this.config = this.loadConfig()
+    }
+
+    process(msg) {
+        this.data = this.loadData()
+        switch (msg.action) {
+            case 'yes':
+            case 'no':
+            case 'maybe':
+                this.update(msg.action, (msg.args.length > 0 ? msg.args[0] : this.config.defaultGame), msg.user)
+                break
+            case 'remove':
+                this.remove((msg.args.length > 0 ? msg.args[0] : this.config.defaultGame), msg.user)
+                break
+            case 'help':
+                msg.respond(this.showHelp())
+                break
+            default:
+                if (msg.action) {
+                    msg.respond(msg.action + ' - hvad mener du?')
+                    return
+                }
+                this.showSummary()
+                break
+        }
     }
 
     path(filename) {
@@ -32,30 +66,6 @@ class Prac extends Command {
         try {
             fs.writeFile(this.path('prac.json'), JSON.stringify(this.data), 'utf8', () => { })
         } catch (error) {}
-    }
-
-    process(msg) {
-        this.data = this.loadData()
-        switch (msg.action) {
-            case 'yes':
-            case 'no':
-            case 'maybe':
-                this.update(msg.action, (msg.args.length > 0 ? msg.args[0] : this.config.defaultGame), msg.user)
-                break
-            case 'remove':
-                this.remove((msg.args.length > 0 ? msg.args[0] : this.config.defaultGame), msg.user)
-                break
-            case 'help':
-                msg.respond(this.showHelp())
-                break
-            default:
-                if (msg.action) {
-                    msg.respond(msg.action + ' - hvad mener du?')
-                    return
-                }
-                this.showSummary()
-                break
-        }
     }
 
     update(action, game, user) {
@@ -142,16 +152,6 @@ class Prac extends Command {
 
     currentDate() {
         return moment().format('YYYYMMDD')
-    }
-
-    help() {
-        return [
-            { trigger: 'prac', description: 'vis oversigt over tilmeldinger' },
-            { trigger: 'prac yes <game?>', description: 'tilmeld dig til prac' },
-            { trigger: 'prac no <game?>', description: 'afmeld til fra prac' },
-            { trigger: 'prac remove <game?>', description: 'fjern din tilmelding' },
-            { trigger: 'prac help', description: 'vis denne hjælpebesked' },
-        ]
     }
 }
 

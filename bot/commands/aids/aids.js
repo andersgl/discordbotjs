@@ -2,6 +2,19 @@ const Command = require('../command')
 
 class Aids extends Command {
 
+    triggers() {
+        return ['giveaids']
+    }
+
+    help() {
+        return [
+            { trigger: 'aids', description: 'vis aids status' },
+            { trigger: 'aids <@bruger>', description: 'se om en bruger har aids' },
+            { trigger: 'aids reset', description: 'kurér folk for aids' },
+            { trigger: 'giveaids <@bruger>', description: 'giv aids til anden bruger' },
+        ]
+    }
+
     init() {
         this.hasAids = []
         this.userNames = {}
@@ -91,19 +104,6 @@ class Aids extends Command {
                 }).join('\n')
         }
         return status + '\n**!aids help** for hjælp'
-    }
-
-    triggers() {
-        return ['giveaids']
-    }
-
-    help() {
-        return [
-            { trigger: 'aids', description: 'vis aids status' },
-            { trigger: 'aids <@bruger>', description: 'se om en bruger har aids' },
-            { trigger: 'aids reset', description: 'kurér folk for aids' },
-            { trigger: 'giveaids <@bruger>', description: 'giv aids til anden bruger' },
-        ]
     }
 }
 

@@ -30,20 +30,28 @@ class Message {
         return this.trigger !== null
     }
 
-    respond(text) {
-        this.msg.channel.send(text)
+    respond(text = '') {
+        if (text) {
+            this.msg.channel.send(text)
+        }
     }
 
-    respondTTS(text) {
-        this.msg.channel.send(text, { tts: true })
+    respondTTS(text = '') {
+        if (text) {
+            this.msg.channel.send(text, { tts: true })
+        }
     }
 
-    reply(text) {
-        this.msg.reply(text)
+    reply(text = '') {
+        if (text) {
+            this.msg.reply(text)
+        }
     }
 
-    replyTTS(text) {
-        this.msg.reply(text, { tts: true })
+    replyTTS(text = '') {
+        if (text) {
+            this.msg.reply(text, { tts: true })
+        }
     }
 
     highlight2User(text) {

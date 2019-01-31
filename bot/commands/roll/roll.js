@@ -2,10 +2,6 @@ const Command = require('../command');
 
 class Roll extends Command {
 
-    init() {
-        this.resetContest()
-    }
-
     triggers() {
         return ['startroll']
     }
@@ -15,6 +11,10 @@ class Roll extends Command {
             { trigger: 'roll', description: 'rul et tal' },
             { trigger: 'startroll <time> <prize>', description: 'start en konkurrence i en tidsperiode med præmie' },
         ]
+    }
+
+    init() {
+        this.resetContest()
     }
     
     process(msg) {
