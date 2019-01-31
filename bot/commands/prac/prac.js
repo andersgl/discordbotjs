@@ -20,14 +20,19 @@ class Prac extends Command {
 
     process(msg) {
         this.data = this.loadData()
+        let game = this.config.defaultGame
         switch (msg.action) {
             case 'yes':
             case 'no':
             case 'maybe':
-                this.update(msg.action, (msg.args.length > 0 ? msg.args[0] : this.config.defaultGame), msg.user)
+                game = msg.args.length > 0 ? msg.args[0] : this.config.defaultGame
+                msg.respond(this.update(msg.action, game, msg.user))
+                msg.respond(this.summary(game))
                 break
             case 'remove':
-                this.remove((msg.args.length > 0 ? msg.args[0] : this.config.defaultGame), msg.user)
+                game = msg.args.length > 0 ? msg.args[0] : this.config.defaultGame
+                msg.respond(this.remove((msg.args.length > 0 ? msg.args[0] : this.config.defaultGame), msg.user))
+                msg.respond(this.summary(game))
                 break
             case 'help':
                 msg.respond(this.showHelp())
@@ -37,7 +42,7 @@ class Prac extends Command {
                     msg.respond(msg.action + ' - hvad mener du?')
                     return
                 }
-                this.showSummary()
+                msg.respond(this.summary())
                 break
         }
     }
@@ -70,8 +75,7 @@ class Prac extends Command {
 
     update(action, game, user) {
         if (!this.gameIsAvailable(game)) {
-            this.msg.respond(game + ' er ikke et spil jeg kender ...')
-            return
+            return game + ' er ikke et spil jeg kender ...'
         }
 
         // Make sure date & game is created
@@ -95,10 +99,8 @@ class Prac extends Command {
                 time: moment().unix()
             })
         }
-        
-        this.msg.respond('Du sagde ' + action)
-        this.showSummary(game)
         this.saveData()
+        return 'Du sagde ' + action
     }
 
     remove(game, user) {
@@ -110,16 +112,13 @@ class Prac extends Command {
         if (index >= 0) {
             this.data[curDate][game].splice(index, 1)
         }
-
-        this.msg.respond('Du er nu fjernet')
-        this.showSummary(game)
         this.saveData()
+        return 'Du er nu fjernet'
     }
 
-    showSummary(game = null) {
+    summary(game = null) {
         if (this.noPracEntries()) {
-            this.msg.respond('Du kan stadig nå at være den første der melder sig til prac i dag')
-            return
+            return 'Du kan stadig nå at være den første der melder sig til prac i dag'
         }
         let summary = ''
         const pracToday = this.data[this.currentDate()]
@@ -138,7 +137,7 @@ class Prac extends Command {
                 + '--- ' + entries.maybe.join(', ') + '\n'
                 + '```'
         }
-        this.msg.respond(summary)
+        return summary
     }
 
     noPracEntries() {
