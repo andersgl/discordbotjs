@@ -1,5 +1,5 @@
 {
-    "name": "clanRaaDiscordBot",
+    "name": "clanraadiscordbotsomernice",
     "version": "1.0.0",
     "description": "Discordbotten over alle andre",
     "main": "run.js",
@@ -16,6 +16,5 @@
         "start": "./node_modules/pm2/bin/pm2 start run.js --name=discordbotjs",
         "stop": "./node_modules/pm2/bin/pm2 stop discordbotjs",
         "restart": "./node_modules/pm2/bin/pm2 restart discordbotjs"
-    },
-    "author": "Bubber"
+    }
 }

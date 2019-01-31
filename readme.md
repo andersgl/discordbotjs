@@ -1,4 +1,4 @@
-# Discordbot for RaA
+# Discordbot for #clanraa
 
 ## Install & setup
 * Run `npm i` to install node dependencies
