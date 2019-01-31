@@ -6,6 +6,6 @@
 
 ## Usage
 * Now you can run these commands:
- - `npm start`
- - `npm stop`
- - `npm restart`
+* `npm start`
+* `npm stop`
+* `npm restart`
