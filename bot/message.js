@@ -26,7 +26,10 @@ class Message {
         }
     }
 
-    isCommand() {
+    isTrigger(trigger = '') {
+        if (trigger) {
+            return trigger === this.trigger
+        }
         return this.trigger !== null
     }
 

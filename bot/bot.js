@@ -25,7 +25,7 @@ class Bot {
                 .filter(channel => channel.type === 'text')
                 .forEach(channel => {
                     channel.send('Hej, nu er jeg her igen!')
-            })
+                })
         });
 
         this.client.on('message', msg => {
@@ -38,15 +38,15 @@ class Bot {
 
             // Admin commands
             let matches = null
-            if (message.content === '!updatethebot') {
+            if (message.content === '!updatelortet') {
                 this.restart(message)
-            } else if (matches = msg.content.match(/^\!enable\s([a-zA-Z0-9æøåÆØÅ]+)/i)) {
-                this.enableCmd(matches[1], message)
-            } else if (matches = msg.content.match(/^\!disable\s([a-zA-Z0-9æøåÆØÅ]+)/i)) {
-                this.disableCmd(matches[1], message)
+            } else if (message.isTrigger('enable') && message.action) {
+                this.enableCmd(message.action, message)
+            } else if (message.isTrigger('disable') && message.action) {
+                this.disableCmd(message.action, message)
             }
 
-            if (message.isCommand() && this.triggers[message.trigger] !== undefined) {
+            if (message.isTrigger() && this.triggers[message.trigger] !== undefined) {
                 if (this.disabledCmds.indexOf(this.triggers[message.trigger]) >= 0) {
                     return // Command is disabled
                 }
