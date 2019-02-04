@@ -37,7 +37,7 @@ class Bot {
             const message = new Message(msg, new User(msg.author, this.config.admins))
 
             if (message.content.toLowerCase().indexOf('erann') >= 0) {
-                return message.respond(this.randomErann())
+                message.respond(this.randomErann())
             }
 
             // Admin commands
