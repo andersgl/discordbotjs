@@ -36,14 +36,18 @@ class Bot {
 
             const message = new Message(msg, new User(msg.author, this.config.admins))
 
+            if (message.content.toLowerCase().indexOf('erann') >= 0) {
+                return message.respond(this.randomErann())
+            }
+
             // Admin commands
             let matches = null
             if (message.content === '!updatelortet') {
-                this.restart(message)
+                return this.restart(message)
             } else if (message.isTrigger('enable') && message.action) {
-                this.enableCmd(message.action, message)
+                return this.enableCmd(message.action, message)
             } else if (message.isTrigger('disable') && message.action) {
-                this.disableCmd(message.action, message)
+                return this.disableCmd(message.action, message)
             }
 
             if (message.isTrigger() && this.triggers[message.trigger] !== undefined) {
@@ -114,6 +118,16 @@ class Bot {
             message.respond('Kommando slået til: ' + cmd)
             this.disabledCmds.splice(index, 1)
         }
+    }
+
+    randomErann() {
+        const tracks = [
+            'I Wanna Wake Up With You: https://www.youtube.com/watch?v=Gi6xkDHXjUM',
+            'Still Believing: https://www.youtube.com/watch?v=q7coEGBZMUM',
+            'Stay (with me): https://www.youtube.com/watch?v=_Fxbel9l50w',
+            'Hjertet ser: https://www.youtube.com/watch?v=rDM5n4l06DU',
+        ]
+        return tracks[Math.floor(Math.random() * tracks.length)]
     }
 
 }
