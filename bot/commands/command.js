@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 class Command {
 
     constructor() {
@@ -29,11 +31,14 @@ class Command {
     }
 
     showHelp() {
-        return '**' + this.constructor.name + ' kommandoer:**\n'
-            + this.help().map(help => {
-                return '**!' + help.trigger + '** - ' + help.description
-            }).join('\n')
-            + '\n'
+        let helpEmbed = new Discord.RichEmbed()
+                            .setTitle(this.constructor.name + ' kommandoer:');
+
+        this.help().map(help => {
+                helpEmbed.addField('!' + help.trigger, help.description);
+        });
+
+        return helpEmbed;
     }
 }
 
