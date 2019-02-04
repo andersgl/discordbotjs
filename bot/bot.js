@@ -54,7 +54,7 @@ class Bot {
             } else {
                 // Other for lolz stuff?
                 this.lolz.message(message)
-            }  
+            }
         })
 
         this.client.login(this.config.token)
@@ -115,7 +115,6 @@ class Bot {
             this.disabledCmds.splice(index, 1)
         }
     }
-
 }
 
 module.exports = Bot
