@@ -1,6 +1,8 @@
 const fs = require('fs')
 const moment = require('moment')
 const Command = require('../command')
+const Discord = require('discord.js');
+const _ = require('lodash')
 
 class Prac extends Command {
 
@@ -86,7 +88,7 @@ class Prac extends Command {
         if (this.data[curDate][game] === undefined) {
             this.data[curDate][game] = []
         }
-        
+
         const index = this.data[curDate][game].findIndex(entry => entry.id === user.id)
         if (index >= 0) {
             this.data[curDate][game][index].action = action
@@ -118,30 +120,43 @@ class Prac extends Command {
 
     summary(game = null) {
         if (this.noPracEntries()) {
-            return 'Du kan stadig nå at være den første der melder sig til prac i dag'
+            return 'Du kan stadig nå at være den første der melder sig til prac i dag.'
         }
-        let summary = ''
+
         const pracToday = this.data[this.currentDate()]
+
+        let pracEmbed = new Discord.RichEmbed().setColor('0xff8000');
+
         for (let key in pracToday) {
             if (game !== null && key !== game) {
                 continue
             }
             const entries = { yes: [], no: [], maybe: [] }
+
             pracToday[key].forEach(entry => {
                 entries[entry.action].push(entry.name)
             })
-            summary += '```diff\n'
-                + key.toUpperCase() + '\n'
-                + '+ ' + entries.yes.join(', ') + '\n'
-                + '- ' + entries.no.join(', ') + '\n'
-                + '--- ' + entries.maybe.join(', ') + '\n'
-                + '```'
+
+            pracEmbed.addField(key.toUpperCase(), '\u200B');
+
+            if (!_.isEmpty(entries.yes)) {
+                pracEmbed.addField('😉 Yes', entries.yes.join(', '), true);
+            }
+            if (!_.isEmpty(entries.no)) {
+                pracEmbed.addField('😡 No', entries.no.join(', '), true)
+            }
+            if (!_.isEmpty(entries.maybe)) {
+                pracEmbed.addField('😰 Maybe', entries.maybe.join(', '), true);
+            }
+
+            pracEmbed.addBlankField();
         }
-        return summary
+
+        return pracEmbed;
     }
 
     noPracEntries() {
-        const curDate = this.currentDate()        
+        const curDate = this.currentDate()
         return this.data[curDate] === undefined || Object.keys(this.data[curDate]) === 0
     }
 

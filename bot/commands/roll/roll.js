@@ -16,13 +16,16 @@ class Roll extends Command {
     init() {
         this.resetContest()
     }
-    
+
     process(msg) {
         switch (msg.trigger) {
+            case 'help':
+                msg.respond(this.showHelp())
+                break
             case 'startroll':
                 this.startContent(msg)
                 break
-            
+
             case 'roll':
             default:
                 const random = this.random()
@@ -51,7 +54,7 @@ class Roll extends Command {
             msg.args.unshift(msg.action)
         }
         const prize = msg.args.join(' ')
-        
+
         this.constest = setTimeout(() => {
             let winner = null
             let response = '```'
@@ -65,9 +68,9 @@ class Roll extends Command {
             }
             response += '... og vinderen er ' + winner.username
                 + '```'
-            
+
             msg.respond(response)
-            
+
             this.resetContest()
         }, time * 1000)
 

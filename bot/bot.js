@@ -58,7 +58,7 @@ class Bot {
             } else {
                 // Other for lolz stuff?
                 this.lolz.message(message)
-            }  
+            }
         })
 
         this.client.login(this.config.token)
@@ -120,7 +120,7 @@ class Bot {
         }
     }
 
-    randomErann() {
+  randomErann() {
         const tracks = [
             'I Wanna Wake Up With You: https://www.youtube.com/watch?v=Gi6xkDHXjUM',
             'Still Believing: https://www.youtube.com/watch?v=q7coEGBZMUM',
@@ -129,7 +129,6 @@ class Bot {
         ]
         return tracks[Math.floor(Math.random() * tracks.length)]
     }
-
 }
 
 module.exports = Bot
