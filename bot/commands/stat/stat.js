@@ -193,14 +193,15 @@ class Stat extends Command {
                     const cts = teams[3];
                     var allPlayers = _.concat(terrorists.members, cts.members);
                     var totals = {};
+                    var totals2 = {};
 
                     _.forEach(allPlayers, function(player) {
-                        // if (!_.has(totals, player.steamId)) {
-                        //     this.l('create player!!');
-                        // }
+                        if (!_.has(totals, player.steamId)) {
+                            this.l('create player!!');
+                        }
 
                         if (!totals[player.steamId]) {
-                            //totals[player.steamId].info = player.userInfo;
+                            totals2[player.steamId].info = player.userInfo;
                             totals[player.steamId] = {
                                 kills: player.kills,
                                 deaths: player.deaths,
