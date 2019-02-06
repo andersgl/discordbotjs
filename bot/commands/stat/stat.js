@@ -87,16 +87,60 @@ class Stat extends Command {
 
         let table = '```';
 
-        table += `╔═════════════╦═══╦═══╦═══╦═════╦════╦═════╦═════╦═══╗\n`;
+        table += `╔═════════════════╦═════╦═════╦═════╦═════╦═════╦═════╦═════╦═════╗\n`;
+        table += `║                 ║  K  ║  D  ║  A  ║ +/- ║  HS ║ ADR ║ MVP ║  P  ║\n`;
+        table += `╠═════════════════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╣\n`;
 
-        _.forEach(match, function(data) {
-            table += `║ Ralla       ║ 4 ║ 1 ║ 0 ║  3  ║  1 ║  1  ║  1  ║ 2 ║\n`;
-        });
+        _.forEach(match, function(data, key) {
+            //console.log(key, data);
 
-        table += `╚═════════════╩═══╩═══╩═══╩═════╩════╩═════╩═════╩═══╝\n`;
+            var name = this.wrap(key, 15);
+            var kills = this.wrap(data.kills, 3);
+            var deaths = this.wrap(data.deaths, 3);
+            var assists = this.wrap(data.assists, 3);
+            var assists = this.wrap(data.assists, 3);
+            var kd = this.wrap(data.kills - data.deaths, 3);
+            var hs = Math.round((data.headShotKills / data.kills) * 100);
+            var damage = this.wrap(Math.round(data.damage / 16), 3); // todo: get rounds.
+            var mvps = this.wrap(data.mvps, 3);
+            var score = this.wrap(data.score, 3);
+
+            //var hs = this.wrap(hs, 3);
+
+            table += `║ ${name} ║ ${kills} ║ ${deaths} ║ ${assists} ║ ${kd} ║ ${hs}% ║ ${damage} ║ ${mvps} ║ ${score} ║\n`;
+            table += `╠═════════════════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╣\n`;
+        }.bind(this));
+
+        table += `╚═════════════════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╝\n`;
         table += '```';
 
         return table;
+    }
+
+    wrap(str, length, pad = ' ') {
+        var theString = new String(str);
+        theString = theString.substring(0, length);
+
+        if (length > theString.length) {
+            theString = new Array(length - theString.length + 1).join(' ') + theString;
+        }
+
+        return theString;
+        // l(str);
+
+// function pad(width, string, padding) {
+//   return (width <= string.length) ? string : pad(width, padding + string, padding)
+// }
+// pad(5, 'hi', '0')
+// => "000hi"
+
+
+
+        // if (padLeft) {
+        //     return (pad + str).slice(-pad.length);
+        // } else {
+        //     return (str + pad).substring(0, pad.length);
+        // }
     }
 
     processDemo(msg) {
@@ -104,33 +148,33 @@ class Stat extends Command {
 
 //         let table = '```';
 //         table += `
-// ╔═════════════╦═══╦═══╦═══╦═════╦════╦═════╦═════╦═══╗
-// ║             ║ K ║ D ║ A ║ +/- ║ HS ║ ADR ║ MVP ║ P ║
-// ╠═════════════╬═══╬═══╬═══╬═════╬════╬═════╬═════╬═══╣
-// ║ Ralla       ║ 4 ║ 1 ║ 0 ║  3  ║  1 ║  1  ║  1  ║ 2 ║
-// ╠═════════════╬═══╬═══╬═══╬═════╬════╬═════╬═════╬═══╣
-// ║ DevilsAngel ║ 1 ║ 1 ║ 0 ║  0  ║  1 ║  1  ║  0  ║ 1 ║
-// ╠═════════════╬═══╬═══╬═══╬═════╬════╬═════╬═════╬═══╣
-// ║             ║   ║   ║   ║     ║    ║     ║     ║   ║
-// ╠═════════════╬═══╬═══╬═══╬═════╬════╬═════╬═════╬═══╣
-// ║             ║   ║   ║   ║     ║    ║     ║     ║   ║
-// ╚═════════════╩═══╩═══╩═══╩═════╩════╩═════╩═════╩═══╝`;
+// ╔═════════════════╦═════╦═════╦═════╦═════╦═════╦═════╦═════╦═════╗
+// ║                 ║  K  ║  D  ║  A  ║ +/- ║  HS ║ ADR ║ MVP ║  P  ║
+// ╠═════════════════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╣
+// ║ DevilsAngelxxxx ║ xxx ║ xxx ║ xxx ║  xx ║ xx% ║ xxx ║  xx ║ xxx ║
+// ╠═════════════════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╣
+// ║                 ║     ║     ║     ║     ║     ║     ║     ║     ║
+// ╠═════════════════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╣
+// ║                 ║     ║     ║     ║     ║     ║     ║     ║     ║
+// ╠═════════════════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╣
+// ║                 ║     ║     ║     ║     ║     ║     ║     ║     ║
+// ╚═════════════════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╝`;
 //         table += '```';
 
-        // let embed = new Discord.RichEmbed()
-        //                 .setColor('0xff8000')
-        //                 .addField('Some match title', '\u200B')
-        //                 .addField('Stats', table);
+//         // let embed = new Discord.RichEmbed()
+//         //                 .setColor('0xff8000')
+//         //                 .addField('Some match title', '\u200B')
+//         //                 .addField('Stats', table);
 
-        // msg.respond(table);
+//         msg.respond(table);
 
         var demoFileName = 'test.dem';
         var hash = this.getHash(demoFileName);
 
         if (_.has(this.matches, hash)) {
             this.l('This demo has already been processed.');
-            msg.respond(this.getMatchTable(hash));
-            return;
+            // msg.respond(this.getMatchTable(hash));
+            // return;
         }
 
         fs.readFile(this.path(demoFileName), (err, buffer) => {
@@ -151,7 +195,12 @@ class Stat extends Command {
                     var totals = {};
 
                     _.forEach(allPlayers, function(player) {
+                        // if (!_.has(totals, player.steamId)) {
+                        //     this.l('create player!!');
+                        // }
+
                         if (!totals[player.steamId]) {
+                            //totals[player.steamId].info = player.userInfo;
                             totals[player.steamId] = {
                                 kills: player.kills,
                                 deaths: player.deaths,
@@ -179,7 +228,7 @@ class Stat extends Command {
             });
 
             demoFile.on('end', e => {
-                console.log('Done');
+                console.log('Demo run done...');
                 this.processDemoTotals(hash);
             });
 
