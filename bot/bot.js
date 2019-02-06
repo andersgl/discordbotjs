@@ -34,7 +34,7 @@ class Bot {
                 return
             }
 
-            const message = new Message(msg, new User(msg.author, this.config.admins))
+            const message = new Message(msg, new User(msg.author, this.config))
 
             if (message.content.toLowerCase().indexOf('erann') >= 0) {
                 message.respond(this.randomErann())
