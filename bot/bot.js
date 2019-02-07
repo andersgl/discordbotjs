@@ -21,11 +21,11 @@ class Bot {
 
         this.client.on('ready', () => {
             console.log(`Logged in as ${this.client.user.tag}!`)
-            this.client.channels.first().guild.channels
-                .filter(channel => channel.type === 'text')
-                .forEach(channel => {
-                    channel.send('Hej, nu er jeg her igen!')
-                })
+            // this.client.channels.first().guild.channels
+            //     .filter(channel => channel.type === 'text')
+            //     .forEach(channel => {
+            //         channel.send('Hej, nu er jeg her igen!')
+            //     })
         });
 
         this.client.on('message', msg => {

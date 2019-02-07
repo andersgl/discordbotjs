@@ -6,38 +6,57 @@ const _         = require('lodash');
 const crypto    = require('crypto');
 const utf8      = require('utf8');
 //const Table     = require('cli-table3');
+//const download  = require('download');
+const url       = require('url');
+const path      = require('path');
+const http      = require('http');
+const decompress = require('decompress');
+const decompressGz = require('decompress-gz');
+const decompressBzip2 = require('decompress-bzip2');
 
 
 class Stat extends Command {
     init() {
         this.demoTotals = [];
         this.matches = this.loadMatches();
+        this.processing = false;
     }
 
     triggers() {
-        return ['stat', 'd']
+        return ['demo']
     }
 
     help() {
         return [
-            { trigger: 'stat', description: 'fubar' },
-            { trigger: 'd', description: 'fubar' }
+            { trigger: 'demo <url>', description: 'Upload a GOTV demo and get the stats. (..dem.bz2)' }
         ]
     }
 
     process(msg) {
+        if (!msg.action) {
+            msg.respond(this.showHelp());
+            return;
+        }
+
         switch (msg.trigger) {
-            case 'stat':
-                this.k(msg)
-            break
-            case 'd':
+            case 'demo':
+                if (!msg.action) {
+                    msg.respond('No demo provided.');
+                    return;
+                }
+
+                if (this.processing) {
+                    msg.respond('Please wait for other demo to finish...');
+                    return;
+                }
+
                 this.processDemo(msg);
             break;
         }
     }
 
     getHash(demoFile){
-        return crypto.createHash('md5').update(this.path(demoFile)).digest('hex');
+        return crypto.createHash('md5').update(this.path(demoFile)).digest('hex').substr(2, 9);
     }
 
     l(s) {
@@ -46,7 +65,7 @@ class Stat extends Command {
 
     getMatchTable(hash) {
         if (!_.has(this.matches, hash)) {
-            return 'Kunne ikke finde de data.';
+            return 'I couldn\'t find anything for that match.';
         }
 
         // const statsTable = new Table({
@@ -94,9 +113,7 @@ class Stat extends Command {
         table += `╠═════════════════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╣\n`;
 
         _.forEach(match, function(data, key) {
-
-            console.log(data.info.name.split("").length);
-
+            //console.log(data.info.name.split("").length);
             var name = utf8.encode(data.info.name);
             //var kk = this.strLength(data.info.name);
 
@@ -108,7 +125,7 @@ class Stat extends Command {
             var kd = this.wrap(data.stats.kills - data.stats.deaths, 3);
             var hs = Math.round((data.stats.headShotKills / data.stats.kills) * 100);
             var damage = this.wrap(Math.round(data.stats.damage / 16), 3); // todo: get rounds.
-            var mvps = this.wrap(data.stats.mvps, 3);
+            var mvps = this.wrap(data.stats.mvps + '★', 3);
             var score = this.wrap(data.stats.score, 3);
 
             //var hs = this.wrap(hs, 3);
@@ -123,12 +140,12 @@ class Stat extends Command {
         return table;
     }
 
- strLength(s) {
-  var length = 0;
-  while (s[length] !== undefined)
-    length++;
-  return length;
-}
+    //  strLength(s) {
+    //   var length = 0;
+    //   while (s[length] !== undefined)
+    //     length++;
+    //   return length;
+    // }
 
     wrap(str, length, pad = ' ', padDirection = 'right') {
         var theString = new String(str);
@@ -158,7 +175,75 @@ class Stat extends Command {
         // }
     }
 
+        // _download(url, dest, cb) {
+        //   var file = fs.createWriteStream(dest);
+        //   var request = http.get(url, function(response) {
+        //     response.pipe(file);
+        //     file.on('finish', function() {
+        //       file.close(cb);  // close() is async, call cb after close completes.
+        //       return true;
+        //     });
+        //   }).on('error', function(err) { // Handle errors
+        //     fs.unlink(dest); // Delete the file async. (But we don't check the result)
+        //     if (cb) cb(err.message);
+        //     return false;
+        //   });
+        // };
+
+    downloadAndDecompressDemo(url, dest, filename){
+        var file = fs.createWriteStream(dest);
+
+        return new Promise((resolve, reject) => {
+            //var responseSent = false; // flag to make sure that response is sent only once.
+            http.get(url, response => {
+                response.pipe(file);
+                file.on('finish', () =>{
+                    file.close(() => {
+                        // if(responseSent)  return;
+                        // responseSent = true;
+
+                        decompress(dest, this.path('/demos'), {
+                            //filter: file => path.extname(file.path) !== '.dem',
+                            plugins: [
+                                decompressBzip2({path: filename})
+                            ]
+                        }).then(files => {
+                            this.l(files);
+                            console.log('Files decompressed');
+
+                            fs.chmodSync(this.path('/demos/') + filename, '755');
+
+                            resolve();
+                        });
+
+                        //this.path('/demos')
+                        // decompress(dest, 'dist', {
+                        //     //filter: file => path.extname(file.path) !== '.dem',
+                        //     plugins: [
+                        //         decompressGz()
+                        //     ]
+                        // }).then(files => {
+                        //     console.log(files);
+                        //     console.log('extract done!');
+                        //     resolve();
+                        // });
+                    });
+                });
+            }).on('error', err => {
+                // if(responseSent)  return;
+                // responseSent = true;
+                reject(err);
+            });
+        });
+    }
+
+    nobz2(str) {
+        return str.replace('.bz2', '');
+    }
+
     processDemo(msg) {
+        // this.processDemoData(this.path('demos/test.dem'), 'k', msg);
+
         // https://www.tablesgenerator.com/text_tables
 
 //         let table = '```';
@@ -183,16 +268,41 @@ class Stat extends Command {
 
 //         msg.respond(table);
 
-        var demoFileName = 'test.dem';
-        var hash = this.getHash(demoFileName);
+        // http://replay181.valve.net/730/003327493294446870689_1736776251.dem.bz2
+        var demoFilePath = msg.action;
+        var demoFileParsed = url.parse(demoFilePath);
+        var demoFileName = path.basename(demoFileParsed.pathname);
+        var hash = this.getHash(demoFilePath);
 
         if (_.has(this.matches, hash)) {
-            this.l('This demo has already been processed.');
+            //this.l('This demo has already been processed.');
             msg.respond(this.getMatchTable(hash));
             return;
         }
 
-        fs.readFile(this.path(demoFileName), (err, buffer) => {
+        this.processing = true;
+
+        msg.respond('Please wait while I process the demo.');
+
+        var tmpDemoPath = this.path('demos/') + demoFileName;
+
+        this.downloadAndDecompressDemo(demoFilePath, tmpDemoPath, this.nobz2(demoFileName))
+            .then( () => {
+                console.log('processing complete');
+                this.processDemoData(this.nobz2(tmpDemoPath), hash, msg);
+            })
+            .catch( e => {
+                console.error('download error', e);
+                msg.respond('That doesn\'t look like a valid demo file.');
+            });
+    }
+
+    processDemoData(demoPath, hash, msg) {
+        console.log(demoPath);
+        console.log('k1');
+
+        fs.readFile(demoPath, (err, buffer) => {
+            console.log('k2');
             const demoFile = new demofile.DemoFile();
 
             demoFile.entities.on('change', e => {
@@ -202,6 +312,7 @@ class Stat extends Command {
 
                 // Game over.
                 if (e.newValue == 5) {
+                    console.log('k3');
                     const roundCount = demoFile.gameRules.roundsPlayed;
                     const teams = demoFile.teams;
                     const terrorists = teams[2];
@@ -211,7 +322,6 @@ class Stat extends Command {
 
                     _.forEach(allPlayers, function(player) {
                         if (!_.has(totals, player.userId)) {
-                            console.log('create player!!');
                             totals[player.userId] = {
                                 info: player.userInfo,
                                 stats: {
@@ -238,12 +348,13 @@ class Stat extends Command {
             });
 
             demoFile.on('start', e => {
-                console.log('Running demo...');
+                //msg.respond('Please wait while I process the demo.');
             });
 
             demoFile.on('end', e => {
-                console.log('Demo run done...');
                 this.processDemoTotals(hash);
+                this.processing = false;
+                msg.respond('All done, here\'s the results for the match ('+hash+')\n' + this.getMatchTable(hash));
             });
 
             demoFile.parse(buffer);
@@ -251,16 +362,16 @@ class Stat extends Command {
     }
 
     setDemoTotals(totals) {
+        console.log(totals);
         this.demoTotals = totals;
     }
 
     processDemoTotals(hash) {
-        console.log(hash, this.demoTotals);
         this.matches[hash] = this.demoTotals;
         this.saveMatches();
     }
 
-    path(filename) {
+    path(filename = '') {
         return __dirname + '/' + filename
     }
 
@@ -282,7 +393,7 @@ class Stat extends Command {
 
     loadData(file) {
         try {
-            return require(this.path(file))
+            return require(this.path(file));
         } catch (error) {
             console.log('could not load ' + file);
             return {}
