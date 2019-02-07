@@ -4,7 +4,9 @@ const fs        = require('fs');
 const demofile  = require('demofile');
 const _         = require('lodash');
 const crypto    = require('crypto');
+const utf8      = require('utf8');
 //const Table     = require('cli-table3');
+
 
 class Stat extends Command {
     init() {
@@ -92,18 +94,22 @@ class Stat extends Command {
         table += `╠═════════════════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╣\n`;
 
         _.forEach(match, function(data, key) {
-            //console.log(key, data);
 
-            var name = this.wrap(key, 15);
-            var kills = this.wrap(data.kills, 3);
-            var deaths = this.wrap(data.deaths, 3);
-            var assists = this.wrap(data.assists, 3);
-            var assists = this.wrap(data.assists, 3);
-            var kd = this.wrap(data.kills - data.deaths, 3);
-            var hs = Math.round((data.headShotKills / data.kills) * 100);
-            var damage = this.wrap(Math.round(data.damage / 16), 3); // todo: get rounds.
-            var mvps = this.wrap(data.mvps, 3);
-            var score = this.wrap(data.score, 3);
+            console.log(data.info.name.split("").length);
+
+            var name = utf8.encode(data.info.name);
+            //var kk = this.strLength(data.info.name);
+
+            var name = this.wrap(data.info.name, 15);
+            var kills = this.wrap(data.stats.kills, 3);
+            var deaths = this.wrap(data.stats.deaths, 3);
+            var assists = this.wrap(data.stats.assists, 3);
+            var assists = this.wrap(data.stats.assists, 3);
+            var kd = this.wrap(data.stats.kills - data.stats.deaths, 3);
+            var hs = Math.round((data.stats.headShotKills / data.stats.kills) * 100);
+            var damage = this.wrap(Math.round(data.stats.damage / 16), 3); // todo: get rounds.
+            var mvps = this.wrap(data.stats.mvps, 3);
+            var score = this.wrap(data.stats.score, 3);
 
             //var hs = this.wrap(hs, 3);
 
@@ -117,12 +123,21 @@ class Stat extends Command {
         return table;
     }
 
-    wrap(str, length, pad = ' ') {
+ strLength(s) {
+  var length = 0;
+  while (s[length] !== undefined)
+    length++;
+  return length;
+}
+
+    wrap(str, length, pad = ' ', padDirection = 'right') {
         var theString = new String(str);
         theString = theString.substring(0, length);
 
         if (length > theString.length) {
-            theString = new Array(length - theString.length + 1).join(' ') + theString;
+            var padString = new Array(length - theString.length + 1).join(pad);
+            //console.log(theString + ' = ' + theString.length + ' : ' + padString.length);
+            theString = padDirection == 'right' ? theString + padString : padString + theString;
         }
 
         return theString;
@@ -173,8 +188,8 @@ class Stat extends Command {
 
         if (_.has(this.matches, hash)) {
             this.l('This demo has already been processed.');
-            // msg.respond(this.getMatchTable(hash));
-            // return;
+            msg.respond(this.getMatchTable(hash));
+            return;
         }
 
         fs.readFile(this.path(demoFileName), (err, buffer) => {
@@ -193,30 +208,28 @@ class Stat extends Command {
                     const cts = teams[3];
                     var allPlayers = _.concat(terrorists.members, cts.members);
                     var totals = {};
-                    var totals2 = {};
 
                     _.forEach(allPlayers, function(player) {
-                        if (!_.has(totals, player.steamId)) {
-                            this.l('create player!!');
-                        }
-
-                        if (!totals[player.steamId]) {
-                            totals2[player.steamId].info = player.userInfo;
-                            totals[player.steamId] = {
-                                kills: player.kills,
-                                deaths: player.deaths,
-                                assists: player.assists,
-                                mvps: player.mvps,
-                                headShotKills: 0,
-                                damage: 0,
-                                score: player.score
+                        if (!_.has(totals, player.userId)) {
+                            console.log('create player!!');
+                            totals[player.userId] = {
+                                info: player.userInfo,
+                                stats: {
+                                    kills: player.kills,
+                                    deaths: player.deaths,
+                                    assists: player.assists,
+                                    mvps: player.mvps,
+                                    headShotKills: 0,
+                                    damage: 0,
+                                    score: player.score
+                                }
                             };
                         }
 
                         // Collect pr. round stats
                         _.forEach(player.matchStats, function(stat) {
-                            totals[player.steamId].headShotKills += stat.headShotKills;
-                            totals[player.steamId].damage += stat.damage;
+                            totals[player.userId].stats.headShotKills += stat.headShotKills;
+                            totals[player.userId].stats.damage += stat.damage;
                         });
                     });
 
