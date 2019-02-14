@@ -23,9 +23,7 @@ class Bot {
             console.log(`Logged in as ${this.client.user.tag}!`)
             this.client.channels.first().guild.channels
                 .filter(channel => channel.type === 'text')
-                .forEach(channel => {
-                    channel.send('Hej, nu er jeg her igen!')
-                })
+                .first().send('Hej, nu er jeg her igen!')
         });
 
         this.client.on('message', msg => {
@@ -37,12 +35,12 @@ class Bot {
             const message = new Message(msg, new User(msg.author, this.config.admins))
 
             if (message.content.toLowerCase().indexOf('erann') >= 0) {
-                message.respond(this.randomErann())
+                // message.respond(this.randomErann())
             }
 
             // Admin commands
             let matches = null
-            if (message.content === '!updatelortet') {
+            if (message.content === '!updateyourself') {
                 return this.restart(message)
             } else if (message.isTrigger('enable') && message.action) {
                 return this.enableCmd(message.action, message)
