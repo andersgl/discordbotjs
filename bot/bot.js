@@ -5,7 +5,7 @@ const path = require('path')
 const shell = require('shelljs')
 const Message = require('./message')
 const User = require('./user')
-const Lolz = require('./lolz')
+const Lolz = require('./lolz/lolz')
 
 class Bot {
     constructor(config = {}) {
