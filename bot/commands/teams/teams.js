@@ -22,7 +22,7 @@ class Teams extends Command {
                 const embed = new Discord.RichEmbed().setColor('0xff8000')
                 embed.setTitle('Random teams')
                 teams.forEach((team, index) => {
-                    embed.addField('Team ' + (index + 1), team.join(', '), true)
+                    embed.addField('Team ' + (index + 1), team.join(', '))
                 })
                 msg.respond(embed)
                 break
