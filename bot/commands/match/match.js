@@ -87,9 +87,7 @@ class Match extends Command {
                 if (!prevMatches.length) {
                     return msg.respond('No previous matches found')
                 }
-                this.matchesOverview(prevMatches).forEach(embed => {
-                    msg.respond(embed)
-                })
+                msg.sendEmbeds(this.matchesOverview(prevMatches))
                 break
 
             case 'help':
@@ -97,13 +95,14 @@ class Match extends Command {
                 break
             
             default:
+                if (msg.action) {
+                    return msg.respond('Unknown action: ' + msg.action)
+                }
                 const futureMatches = this.futureMatches()
                 if (!futureMatches.length) {
                     return msg.respond('No future matches found')
                 }
-                this.matchesOverview(futureMatches).forEach(embed => {
-                    msg.respond(embed)
-                })
+                msg.sendEmbeds(this.matchesOverview(futureMatches))
                 break
         }
     }
