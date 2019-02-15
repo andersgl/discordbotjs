@@ -1,3 +1,5 @@
+const _ = require('lodash/array')
+
 class Message {
     constructor(msg, user) {
         this.msg = msg
@@ -18,7 +20,7 @@ class Message {
                 return
             }
             this.action = parts.shift().toLowerCase()
-            
+
             if (!parts.length) {
                 return
             }
@@ -36,6 +38,18 @@ class Message {
     respond(text = '') {
         if (text) {
             this.msg.channel.send(text)
+        }
+    }
+
+    // async await(text = '') {
+    //     await this.msg.channel.awaitMessages(msg => {
+    //         console.log(msg.content);
+    //     })
+    // }
+
+    dm(user, text = '') {
+        if (text && user) {
+            user.send(text)
         }
     }
 
