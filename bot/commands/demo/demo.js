@@ -212,6 +212,10 @@ class Demo extends Command {
                                     resolve();
                                 });
                             break;
+                            default:
+                                this.processing = false;
+                                reject();
+                            break;
                             // case '.rar':
                             //     decompress(dest, this.path('/demos'), {
                             //         plugins: [
@@ -228,6 +232,7 @@ class Demo extends Command {
                     });
                 });
             }).on('error', err => {
+                this.processing = false;
                 reject(err);
             });
         });
