@@ -107,7 +107,9 @@ class Bot {
         embed.setTitle('Commands')
             .setFooter('Type !<command> help for more info on each command')
         for (let cmdName in this.commands) {
-            embed.addField('!' + cmdName, this.commands[cmdName].description() || '(No description)')
+            if (this.disabledCmds.indexOf(cmdName) === -1) {
+                embed.addField('!' + cmdName, this.commands[cmdName].description() || '(No description)')
+            }
         }
         return embed
     }
