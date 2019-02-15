@@ -37,8 +37,9 @@ class Message {
 
     respond(text = '') {
         if (text) {
-            this.msg.channel.send(text)
+            return this.msg.channel.send(text)
         }
+        return this.blankPromise()
     }
 
     // async await(text = '') {
@@ -55,20 +56,34 @@ class Message {
 
     respondTTS(text = '') {
         if (text) {
-            this.msg.channel.send(text, { tts: true })
+            return this.msg.channel.send(text, { tts: true })
         }
+        return this.blankPromise()
     }
 
     reply(text = '') {
         if (text) {
-            this.msg.reply(text)
+            return this.msg.reply(text)
         }
+        return this.blankPromise()
     }
 
     replyTTS(text = '') {
         if (text) {
-            this.msg.reply(text, { tts: true })
+            return this.msg.reply(text, { tts: true })
         }
+        return this.blankPromise()
+    }
+
+    sendEmbeds(embeds) {
+        const embed = embeds.shift()
+        this.respond(embed)
+            .then(msg => {
+                if (embeds.length) {
+                    this.sendEmbeds(embeds)
+                }
+            })
+            .catch(console.error)
     }
 
     highlight2User(text) {
@@ -84,6 +99,14 @@ class Message {
             return ''
         }
         return '<@' + userId + '>'
+    }
+
+    blankPromise() {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(null)
+            }, 100)
+        })
     }
 }
 

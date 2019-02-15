@@ -10,7 +10,8 @@ class Match extends Command {
     help() {
         return [
             { trigger: 'match', description: 'Show upcoming matches' },
-            { trigger: 'match archive', description: 'Show previous matches + results' },
+            { trigger: 'match archive <limit?>', description: 'Show previous matches + results' },
+            { trigger: 'match next <count>', description: 'Show next match(es)' },
             { trigger: 'match yes <hash>', description: 'Sign up for a match' },
             { trigger: 'match no <hash>', description: '"I (pretend to) have better stuff to do"' },
             { trigger: 'match add <datetime> <opponent>', description: 'Add a new match (datetime format: 2019-02-02T20:00)' },
@@ -87,29 +88,44 @@ class Match extends Command {
                 if (!prevMatches.length) {
                     return msg.respond('No previous matches found')
                 }
-                this.matchesOverview(prevMatches).forEach(embed => {
-                    msg.respond(embed)
-                })
+                if (msg.args.length && parseInt(msg.args[0])) {
+                    msg.sendEmbeds(this.matchesOverview(_.take(prevMatches, parseInt(msg.args[0]))))
+                } else {
+                    msg.sendEmbeds(this.matchesOverview(prevMatches))
+                }
                 break
 
             case 'help':
                 msg.respond(this.showHelp())
                 break
+
+            case 'next':
+                const nextMatches = this.futureMatches()
+                if (!nextMatches.length) {
+                    return msg.respond('No future matches found')
+                }
+                msg.sendEmbeds(
+                    this.matchesOverview(
+                        _.take(nextMatches, (msg.args.length && parseInt(msg.args[0]) ? parseInt(msg.args[0]) : 1))
+                    )
+                )
+                break
             
             default:
+                if (msg.action) {
+                    return msg.respond('Unknown action: ' + msg.action)
+                }
                 const futureMatches = this.futureMatches()
                 if (!futureMatches.length) {
                     return msg.respond('No future matches found')
                 }
-                this.matchesOverview(futureMatches).forEach(embed => {
-                    msg.respond(embed)
-                })
+                msg.sendEmbeds(this.matchesOverview(futureMatches))
                 break
         }
     }
 
     matchesOverview(matches = []) {
-        return _.orderBy(matches, ['date'], ['asc']).map(match => {
+        return matches.map(match => {
             if (match.date < moment().unix()) {
                 return this.resultMatchEmbed(match)
             }
@@ -315,11 +331,15 @@ class Match extends Command {
     }
 
     futureMatches() {
-        return this.loadMatches().filter(match => match.date >= moment().unix())
+        return this.sortMatches(this.loadMatches().filter(match => match.date >= moment().unix()), 'asc')
     }
 
     previousMatches() {
-        return this.loadMatches().filter(match => match.date < moment().unix())
+        return this.sortMatches(this.loadMatches().filter(match => match.date < moment().unix()), 'desc')
+    }
+
+    sortMatches(matches = [], direction = 'asc') {
+        return _.orderBy(matches, ['date'], [direction])
     }
 
     formatDate(date) {
