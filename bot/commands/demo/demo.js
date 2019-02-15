@@ -15,7 +15,7 @@ const decompressUnzip = require('decompress-unzip');
 //const download  = require('download');
 //const decompressGz = require('decompress-gz');
 
-class Stat extends Command {
+class Demo extends Command {
     init() {
         this.demoTotals = [];
         this.matches = this.loadMatches();
@@ -160,11 +160,11 @@ class Stat extends Command {
         return theString;
         // l(str);
 
-// function pad(width, string, padding) {
-//   return (width <= string.length) ? string : pad(width, padding + string, padding)
-// }
-// pad(5, 'hi', '0')
-// => "000hi"
+        // function pad(width, string, padding) {
+        //   return (width <= string.length) ? string : pad(width, padding + string, padding)
+        // }
+        // pad(5, 'hi', '0')
+        // => "000hi"
 
 
 
@@ -200,7 +200,6 @@ class Stat extends Command {
                     file.close(() => {
 
                         var ext = path.extname(url);
-                        console.log(ext);
 
                         switch (ext) {
                             case '.bz2':
@@ -275,7 +274,7 @@ class Stat extends Command {
 
         this.downloadAndDecompressDemo(demoFilePath, tmpDemoPath, this.nobz2(demoFileName))
             .then( () => {
-                console.log('processing complete');
+                //console.log('processing complete');
                 this.processDemoData(this.nobz2(tmpDemoPath), hash, msg);
             })
             .catch( e => {
@@ -285,11 +284,7 @@ class Stat extends Command {
     }
 
     processDemoData(demoPath, hash, msg) {
-        console.log(demoPath);
-        console.log('k1');
-
         fs.readFile(demoPath, (err, buffer) => {
-            console.log('k2');
             const demoFile = new demofile.DemoFile();
 
             demoFile.entities.on('change', e => {
@@ -299,7 +294,6 @@ class Stat extends Command {
 
                 // Game over.
                 if (e.newValue == 5) {
-                    console.log('k3');
                     const roundCount = demoFile.gameRules.roundsPlayed;
                     const teams = demoFile.teams;
                     const terrorists = teams[2];
@@ -349,7 +343,6 @@ class Stat extends Command {
     }
 
     setDemoTotals(totals) {
-        console.log(totals);
         this.demoTotals = totals;
     }
 
@@ -437,4 +430,4 @@ class Stat extends Command {
     // }
 }
 
-module.exports = Stat
+module.exports = Demo
