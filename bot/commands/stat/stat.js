@@ -5,15 +5,15 @@ const demofile  = require('demofile');
 const _         = require('lodash');
 const crypto    = require('crypto');
 const utf8      = require('utf8');
-//const Table     = require('cli-table3');
-//const download  = require('download');
 const url       = require('url');
 const path      = require('path');
 const http      = require('http');
 const decompress = require('decompress');
-const decompressGz = require('decompress-gz');
 const decompressBzip2 = require('decompress-bzip2');
-
+const decompressUnzip = require('decompress-unzip');
+//const Table     = require('cli-table3');
+//const download  = require('download');
+//const decompressGz = require('decompress-gz');
 
 class Stat extends Command {
     init() {
@@ -194,44 +194,41 @@ class Stat extends Command {
         var file = fs.createWriteStream(dest);
 
         return new Promise((resolve, reject) => {
-            //var responseSent = false; // flag to make sure that response is sent only once.
             http.get(url, response => {
                 response.pipe(file);
                 file.on('finish', () =>{
                     file.close(() => {
-                        // if(responseSent)  return;
-                        // responseSent = true;
 
-                        decompress(dest, this.path('/demos'), {
-                            //filter: file => path.extname(file.path) !== '.dem',
-                            plugins: [
-                                decompressBzip2({path: filename})
-                            ]
-                        }).then(files => {
-                            this.l(files);
-                            console.log('Files decompressed');
+                        var ext = path.extname(url);
+                        console.log(ext);
 
-                            fs.chmodSync(this.path('/demos/') + filename, '755');
-
-                            resolve();
-                        });
-
-                        //this.path('/demos')
-                        // decompress(dest, 'dist', {
-                        //     //filter: file => path.extname(file.path) !== '.dem',
-                        //     plugins: [
-                        //         decompressGz()
-                        //     ]
-                        // }).then(files => {
-                        //     console.log(files);
-                        //     console.log('extract done!');
-                        //     resolve();
-                        // });
+                        switch (ext) {
+                            case '.bz2':
+                                decompress(dest, this.path('/demos'), {
+                                    plugins: [
+                                        decompressBzip2({path: filename})
+                                    ]
+                                }).then(files => {
+                                    fs.chmodSync(this.path('/demos/') + filename, '755');
+                                    resolve();
+                                });
+                            break;
+                            // case '.rar':
+                            //     decompress(dest, this.path('/demos'), {
+                            //         plugins: [
+                            //             decompressUnzip()
+                            //         ]
+                            //     }).then(files => {
+                            //         console.log('Files decompressed');
+                            //         console.log(files);
+                            //         fs.chmodSync(this.path('/demos/') + filename, '755');
+                            //         resolve();
+                            //     });
+                            // break;
+                        }
                     });
                 });
             }).on('error', err => {
-                // if(responseSent)  return;
-                // responseSent = true;
                 reject(err);
             });
         });
@@ -242,10 +239,7 @@ class Stat extends Command {
     }
 
     processDemo(msg) {
-        // this.processDemoData(this.path('demos/test.dem'), 'k', msg);
-
         // https://www.tablesgenerator.com/text_tables
-
 //         let table = '```';
 //         table += `
 // ╔═════════════════╦═════╦═════╦═════╦═════╦═════╦═════╦═════╦═════╗
@@ -260,12 +254,6 @@ class Stat extends Command {
 // ║                 ║     ║     ║     ║     ║     ║     ║     ║     ║
 // ╚═════════════════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╝`;
 //         table += '```';
-
-//         // let embed = new Discord.RichEmbed()
-//         //                 .setColor('0xff8000')
-//         //                 .addField('Some match title', '\u200B')
-//         //                 .addField('Stats', table);
-
 //         msg.respond(table);
 
         // http://replay181.valve.net/730/003327493294446870689_1736776251.dem.bz2
@@ -275,7 +263,6 @@ class Stat extends Command {
         var hash = this.getHash(demoFilePath);
 
         if (_.has(this.matches, hash)) {
-            //this.l('This demo has already been processed.');
             msg.respond(this.getMatchTable(hash));
             return;
         }

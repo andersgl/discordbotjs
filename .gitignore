@@ -1,3 +1,4 @@
+bot/commands/stat/demos
 /node_modules
 .env
 *.DS_store
