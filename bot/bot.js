@@ -5,7 +5,7 @@ const path = require('path')
 const shell = require('shelljs')
 const Message = require('./message')
 const User = require('./user')
-const Lolz = require('./lolz')
+const Lolz = require('./lolz/lolz')
 
 class Bot {
     constructor(config = {}) {
@@ -21,11 +21,9 @@ class Bot {
 
         this.client.on('ready', () => {
             console.log(`Logged in as ${this.client.user.tag}!`)
-            // this.client.channels.first().guild.channels
-            //     .filter(channel => channel.type === 'text')
-            //     .forEach(channel => {
-            //         channel.send('Hej, nu er jeg her igen!')
-            //     })
+            this.client.channels.first().guild.channels
+                .filter(channel => channel.type === 'text')
+                .first().send('Hej, nu er jeg her igen!')
         });
 
         this.client.on('message', msg => {
@@ -37,12 +35,12 @@ class Bot {
             const message = new Message(msg, new User(msg.author, this.config))
 
             if (message.content.toLowerCase().indexOf('erann') >= 0) {
-                message.respond(this.randomErann())
+                // message.respond(this.randomErann())
             }
 
             // Admin commands
             let matches = null
-            if (message.content === '!updatelortet') {
+            if (message.content === '!updateyourself') {
                 return this.restart(message)
             } else if (message.isTrigger('enable') && message.action) {
                 return this.enableCmd(message.action, message)
