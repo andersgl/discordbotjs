@@ -3,6 +3,7 @@ const _ = require('lodash/string')
 const fs = require('fs')
 const path = require('path')
 const shell = require('shelljs')
+const winston = require('winston')
 const Message = require('./message')
 const User = require('./user')
 const Lolz = require('./lolz/lolz')
@@ -27,39 +28,47 @@ class Bot {
         });
 
         this.client.on('message', msg => {
-            // Skip message from bot itself
-            if (msg.author.id === this.client.user.id) {
-                return
-            }
-
-            const message = new Message(msg, new User(msg.author, this.config))
-
-            if (message.content.toLowerCase().indexOf('erann') >= 0) {
-                // message.respond(this.randomErann())
-            }
-
-            // Admin commands
-            let matches = null
-            if (message.content === '!updateyourself') {
-                return this.restart(message)
-            } else if (message.isTrigger('enable') && message.action) {
-                return this.enableCmd(message.action, message)
-            } else if (message.isTrigger('disable') && message.action) {
-                return this.disableCmd(message.action, message)
-            }
-
-            if (message.isTrigger() && this.triggers[message.trigger] !== undefined) {
-                if (this.disabledCmds.indexOf(this.triggers[message.trigger]) >= 0) {
-                    return // Command is disabled
-                }
-                this.commands[this.triggers[message.trigger]].setMsg(message).process(message)
-            } else {
-                // Other for lolz stuff?
-                this.lolz.message(message)
+            try {
+                this.processMsg(msg)
+            } catch (error) {
+                global.logger.error(error);
             }
         })
 
         this.client.login(this.config.token)
+    }
+
+    processMsg(msg) {
+        // Skip message from bot itself
+        if (msg.author.id === this.client.user.id) {
+            return
+        }
+
+        const message = new Message(msg, new User(msg.author, this.config))
+
+        if (message.content.toLowerCase().indexOf('erann') >= 0) {
+            // message.respond(this.randomErann())
+        }
+
+        // Admin commands
+        let matches = null
+        if (message.content === '!updateyourself') {
+            return this.restart(message)
+        } else if (message.isTrigger('enable') && message.action) {
+            return this.enableCmd(message.action, message)
+        } else if (message.isTrigger('disable') && message.action) {
+            return this.disableCmd(message.action, message)
+        }
+
+        if (message.isTrigger() && this.triggers[message.trigger] !== undefined) {
+            if (this.disabledCmds.indexOf(this.triggers[message.trigger]) >= 0) {
+                return // Command is disabled
+            }
+            this.commands[this.triggers[message.trigger]].setMsg(message).process(message)
+        } else {
+            // Other for lolz stuff?
+            this.lolz.message(message)
+        }
     }
 
     restart(message) {
