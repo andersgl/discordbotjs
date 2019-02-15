@@ -1,5 +1,5 @@
 {
     "token": "",
     "admins": [],
-    "disabledCmds": [] // e.g.: ["prac", "aids", "roll"]
+    "disabledCmds": []
 }
