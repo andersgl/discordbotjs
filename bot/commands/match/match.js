@@ -21,6 +21,10 @@ class Match extends Command {
         ]
     }
 
+    description() {
+        return 'Sign up for and manage matches'
+    }
+
     init() {
         this.jsonStorage = new jsonStorage()
     }
