@@ -12,6 +12,10 @@ class Command {
         return this
     }
 
+    description() {
+        return ''
+    }
+
     triggers() {
         return []
     }
