@@ -1,8 +1,8 @@
-const fs = require('fs')
 const moment = require('moment')
-const Command = require('../command')
 const Discord = require('discord.js')
 const _ = require('lodash')
+const Command = require('../command')
+const jsonStorage = require('../../storage/json')
 
 class Prac extends Command {
 
@@ -22,6 +22,7 @@ class Prac extends Command {
 
     init() {
         this.config = this.loadConfig()
+        this.jsonStorage = new jsonStorage()
     }
 
     process(msg) {
@@ -66,17 +67,11 @@ class Prac extends Command {
     }
 
     loadData() {
-        try {
-            return require(this.path('prac.json'))
-        } catch (error) {
-            return {}
-        }
+        return this.jsonStorage.load('prac/prac.json', {})
     }
 
     saveData() {
-        try {
-            fs.writeFile(this.path('prac.json'), JSON.stringify(this.data), 'utf8', () => { })
-        } catch (error) {}
+        return this.jsonStorage.save('prac/prac.json', this.data)
     }
 
     update(action, game, user) {

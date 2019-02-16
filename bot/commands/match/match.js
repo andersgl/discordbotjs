@@ -1,4 +1,3 @@
-const fs = require('fs')
 const moment = require('moment')
 const Discord = require('discord.js')
 const _ = require('lodash')
@@ -323,11 +322,11 @@ class Match extends Command {
     }
 
     saveMatches(matches) {
-        return this.jsonStorage.save('matches', matches)
+        return this.jsonStorage.save('match/matches.json', matches)
     }
 
     loadMatches() {
-        return this.jsonStorage.load('matches', [])
+        return this.jsonStorage.load('match/matches', [])
     }
 
     futureMatches() {
