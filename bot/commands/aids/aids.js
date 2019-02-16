@@ -8,10 +8,10 @@ class Aids extends Command {
 
     help() {
         return [
-            { trigger: 'aids', description: 'vis aids status' },
-            { trigger: 'aids <@bruger>', description: 'se om en bruger har aids' },
-            { trigger: 'aids reset', description: 'kurér folk for aids' },
-            { trigger: 'giveaids <@bruger>', description: 'giv aids til anden bruger' },
+            { trigger: 'aids', description: 'Show aids status' },
+            { trigger: 'aids <@user>', description: 'Check to see if a user has aids' },
+            { trigger: 'aids reset', description: 'Cure everyone for aids - and give it to yourself' },
+            { trigger: 'giveaids <@user>', description: 'Give aids to someone' },
         ]
     }
 
@@ -27,12 +27,12 @@ class Aids extends Command {
         switch (msg.trigger) {
             case 'giveaids':
                 if (!msg.action) {
-                    msg.respond('Hvem vil du give aids til (brug @)')
+                    msg.respond('Who should be aidsed? (user @)')
                     break
                 }
                 const toUser = msg.highlight2User(msg.action)
                 if (!toUser) {
-                    msg.respond(msg.action + ' er ikke en bruger')
+                    msg.respond(msg.action + ' is not a user')
                     break
                 }
                 msg.respond(this.giveAids(toUser, msg.msg.author.id))
@@ -45,7 +45,8 @@ class Aids extends Command {
                         break
                     case 'reset':
                         this.reset(msg.msg.author)
-                        msg.respond('Aids blev nulstillet')
+                        msg.respond('Aids was reset - you now have aids')
+                        msg.respond(this.status())
                         break
                     default:
                         if (!msg.action) {
@@ -56,12 +57,12 @@ class Aids extends Command {
                         const userHighlight = msg.highlight2User(msg.action)
                         if (userHighlight) {
                             if (this.userHasAids(userHighlight)) {
-                                msg.respond(msg.user2Highlight(userHighlight) + ' har aids!')
+                                msg.respond(msg.user2Highlight(userHighlight) + ' has aids!')
                             } else {
-                                msg.respond(msg.user2Highlight(userHighlight) + ' har ikke aids')
+                                msg.respond(msg.user2Highlight(userHighlight) + ' does not have aids')
                             }
                         } else {
-                            msg.respond(msg.action + ' er ikke en bruger')
+                            msg.respond(msg.action + ' is not a user')
                         }
                         break
                 }
@@ -78,15 +79,15 @@ class Aids extends Command {
 
     giveAids(toUser, fromUser) {
         if (!this.userHasAids(fromUser)) {
-            return 'Du kan ikke give aids når du ikke selv har aids'
+            return 'You cannot give aids when you are aids free'
         }
 
         if (this.userHasAids(toUser)) {
-            return this.msg.user2Highlight(toUser) + ' havde aids i forvejen, men fik lidt mere aids af ' + this.msg.user2Highlight(fromUser)
+            return this.msg.user2Highlight(toUser) + ' had some aids already but got even more aids from ' + this.msg.user2Highlight(fromUser)
         }
         this.hasAids.push(toUser)
 
-        return this.msg.user2Highlight(fromUser) + ' har givet aids til ' + this.msg.user2Highlight(toUser)
+        return this.msg.user2Highlight(fromUser) + ' has given aids to ' + this.msg.user2Highlight(toUser)
     }
 
     userHasAids(userId) {
@@ -96,14 +97,14 @@ class Aids extends Command {
     status() {
         let status = ''
         if (!this.hasAids.length) {
-            status = 'Ingen har aids'
+            status = 'No one has aids'
         } else {
-            status = 'Disse brugere har aids:\n'
+            status = 'The following users have aids:\n'
                 + this.hasAids.map(user => {
                     return '- ' + (this.userNames[user] !== undefined ? this.userNames[user] : this.msg.user2Highlight(user))
                 }).join('\n')
         }
-        return status + '\n**!aids help** for hjælp'
+        return status + '\n**!aids help** for help'
     }
 }
 

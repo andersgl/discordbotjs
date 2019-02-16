@@ -1,19 +1,23 @@
 const fs = require('fs')
 const moment = require('moment')
 const Command = require('../command')
-const Discord = require('discord.js');
+const Discord = require('discord.js')
 const _ = require('lodash')
 
 class Prac extends Command {
 
     help() {
         return [
-            { trigger: 'prac', description: 'vis oversigt over tilmeldinger' },
-            { trigger: 'prac yes <game?>', description: 'tilmeld dig til prac' },
-            { trigger: 'prac no <game?>', description: 'afmeld til fra prac' },
-            { trigger: 'prac remove <game?>', description: 'fjern din tilmelding' },
-            { trigger: 'prac help', description: 'vis denne hjælpebesked' },
+            { trigger: 'prac', description: 'Show prac overview of signup' },
+            { trigger: 'prac yes <game?>', description: 'Sign up for prac' },
+            { trigger: 'prac no <game?>', description: 'No no no, I can\'t prac' },
+            { trigger: 'prac remove <game?>', description: 'Remove your prac entry' },
+            { trigger: 'prac help', description: 'Show prac help' },
         ]
+    }
+
+    description() {
+        return 'Wanna prac today?'
     }
 
     init() {
@@ -41,7 +45,7 @@ class Prac extends Command {
                 break
             default:
                 if (msg.action) {
-                    msg.respond(msg.action + ' - hvad mener du?')
+                    msg.respond(msg.action + ' - what you talking about?')
                     return
                 }
                 msg.respond(this.summary())
@@ -77,7 +81,7 @@ class Prac extends Command {
 
     update(action, game, user) {
         if (!this.gameIsAvailable(game)) {
-            return game + ' er ikke et spil jeg kender ...'
+            return game + ' is not a game I know ...'
         }
 
         // Make sure date & game is created
@@ -102,7 +106,7 @@ class Prac extends Command {
             })
         }
         this.saveData()
-        return 'Du sagde ' + action
+        return 'You said ' + action
     }
 
     remove(game, user) {
@@ -115,12 +119,12 @@ class Prac extends Command {
             this.data[curDate][game].splice(index, 1)
         }
         this.saveData()
-        return 'Du er nu fjernet'
+        return 'You have beeen removed'
     }
 
     summary(game = null) {
         if (this.noPracEntries()) {
-            return 'Du kan stadig nå at være den første der melder sig til prac i dag.'
+            return 'No prac entries today (yet)'
         }
 
         const pracToday = this.data[this.currentDate()]
