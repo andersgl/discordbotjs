@@ -8,8 +8,8 @@ class Roll extends Command {
 
     help() {
         return [
-            { trigger: 'roll', description: 'rul et tal' },
-            { trigger: 'startroll <time> <prize>', description: 'start en konkurrence i en tidsperiode med præmie' },
+            { trigger: 'roll', description: 'Roll a number (1-1000)' },
+            { trigger: 'startroll <time> <prize>', description: 'Start a rolling contest' },
         ]
     }
 
@@ -30,12 +30,12 @@ class Roll extends Command {
             default:
                 const random = this.random()
                 if (!this.constest) {
-                    msg.respond(msg.msg.author.username + ' ruller ... ' + random)
+                    msg.respond(msg.msg.author.username + ' rolls ... ' + random)
                     return
                 }
 
                 if (this.rolls[msg.msg.author.id] !== undefined) {
-                    msg.respond('Du kan kun rulle én gang')
+                    msg.respond('You can only roll once')
                     return
                 }
                 this.rolls[msg.msg.author.id] = { roll: random, username: msg.msg.author.username }
@@ -58,7 +58,7 @@ class Roll extends Command {
         this.constest = setTimeout(() => {
             let winner = null
             let response = '```'
-                + 'Resultat\n'
+                + 'Result\n'
 
             for (let user in this.rolls) {
                 if (!winner || this.rolls[user].roll > winner.roll) {
@@ -66,7 +66,7 @@ class Roll extends Command {
                 }
                 response += this.rolls[user].username + ': ' + this.rolls[user].roll + '\n'
             }
-            response += '... og vinderen er ' + winner.username
+            response += '... and the winner is ' + winner.username
                 + '```'
 
             msg.respond(response)
@@ -74,11 +74,11 @@ class Roll extends Command {
             this.resetContest()
         }, time * 1000)
 
-        let response = 'Starter !roll konkurrence.'
+        let response = 'Starting !roll contest...'
         if (prize.length > 0) {
-            response += ' Præmie: ' + prize + '.'
+            response += ' Prize: ' + prize + '.'
         }
-        response += '\nResultatet vil blive annonceret om ' + time + ' sekunder. Kom i gang!'
+        response += '\nResult will be annonuned in ' + time + ' seconds. Get rollin\' rollin\' rollin\'!'
         msg.respond(response)
     }
 

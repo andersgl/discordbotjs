@@ -10,7 +10,7 @@ class Prac extends Command {
         return [
             { trigger: 'prac', description: 'Show prac overview of signup' },
             { trigger: 'prac yes <game?>', description: 'Sign up for prac' },
-            { trigger: 'prac no <game?>', description: 'NO no no, I can\'t prac' },
+            { trigger: 'prac no <game?>', description: 'No no no, I can\'t prac' },
             { trigger: 'prac remove <game?>', description: 'Remove your prac entry' },
             { trigger: 'prac help', description: 'Show prac help' },
         ]
