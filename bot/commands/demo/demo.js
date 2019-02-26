@@ -276,6 +276,9 @@ class Demo extends Command {
         msg.respond('Please wait while I process the demo.');
 
         var tmpDemoPath = this.path('demos/') + demoFileName;
+        if (!fs.existsSync(this.path('demos/'))) {
+            fs.mkdirSync(this.path('demos/'));
+        }
 
         this.downloadAndDecompressDemo(demoFilePath, tmpDemoPath, this.nobz2(demoFileName))
             .then( () => {
