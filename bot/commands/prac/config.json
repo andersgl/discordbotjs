@@ -1,4 +1,11 @@
 {
     "defaultGame": "cs",
-    "games": ["cs", "lol", "fortnite", "pubg", "overwatch"]
+    "games": [
+        { "name": "cs", "aliases": ["csgo"] },
+        { "name": "lol", "aliases": ["leagueoflegends"] },
+        { "name": "fortnite", "aliases": [] },
+        { "name": "pubg", "aliases": ["playerunknownsbattlegrounds"] },
+        { "name": "overwatch", "aliases": ["ow"] },
+        { "name": "apex", "aliases": ["apexlegends"] }
+    ]
 }
