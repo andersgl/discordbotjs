@@ -75,7 +75,8 @@ class Prac extends Command {
     }
 
     update(action, game, user) {
-        if (!this.gameIsAvailable(game)) {
+        const gameName = this.aliasToGame(game)
+        if (!gameName) {
             return game + ' is not a game I know ...'
         }
 
@@ -84,16 +85,16 @@ class Prac extends Command {
         if (this.data[curDate] === undefined) {
             this.data[curDate] = {}
         }
-        if (this.data[curDate][game] === undefined) {
-            this.data[curDate][game] = []
+        if (this.data[curDate][gameName] === undefined) {
+            this.data[curDate][gameName] = []
         }
 
-        const index = this.data[curDate][game].findIndex(entry => entry.id === user.id)
+        const index = this.data[curDate][gameName].findIndex(entry => entry.id === user.id)
         if (index >= 0) {
-            this.data[curDate][game][index].action = action
-            this.data[curDate][game][index].time = moment().unix()
+            this.data[curDate][gameName][index].action = action
+            this.data[curDate][gameName][index].time = moment().unix()
         } else {
-            this.data[curDate][game].push({
+            this.data[curDate][gameName].push({
                 id: user.id,
                 name: user.username,
                 action: action,
@@ -105,19 +106,25 @@ class Prac extends Command {
     }
 
     remove(game, user) {
+        const gameName = this.aliasToGame(game)
+        if (!gameName) {
+            return game + ' is not a game I know ...'
+        }
+
         const curDate = this.currentDate()
-        if (this.data[curDate][game] === undefined) {
+        if (this.data[curDate][gameName] === undefined) {
             return
         }
-        const index = this.data[curDate][game].findIndex(entry => entry.id === user.id)
+        const index = this.data[curDate][gameName].findIndex(entry => entry.id === user.id)
         if (index >= 0) {
-            this.data[curDate][game].splice(index, 1)
+            this.data[curDate][gameName].splice(index, 1)
         }
         this.saveData()
         return 'You have beeen removed'
     }
 
     summary(game = null) {
+        const gameName = this.aliasToGame(game)
         if (this.noPracEntries()) {
             return 'No prac entries today (yet)'
         }
@@ -127,7 +134,7 @@ class Prac extends Command {
         let pracEmbed = new Discord.RichEmbed().setColor('0xff8000');
 
         for (let key in pracToday) {
-            if (game !== null && key !== game) {
+            if (gameName !== null && key !== gameName) {
                 continue
             }
             const entries = { yes: [], no: [], maybe: [] }
@@ -159,8 +166,17 @@ class Prac extends Command {
         return this.data[curDate] === undefined || Object.keys(this.data[curDate]) === 0
     }
 
-    gameIsAvailable(game) {
-        return this.config.games.indexOf(game) >= 0
+    aliasToGame(gameAlias) {
+        if (!gameAlias) {
+            return gameAlias
+        }
+        let gameName = null
+        this.config.games.forEach(game => {
+            if (game.name == gameAlias.toLowerCase() || game.aliases.indexOf(gameAlias.toLowerCase()) >= 0) {
+                gameName = game.name
+            }
+        })
+        return gameName
     }
 
     currentDate() {
