@@ -13,6 +13,10 @@ class Roll extends Command {
         ]
     }
 
+    description() {
+        return 'Make random rolls'
+    }
+
     init() {
         this.resetContest()
     }

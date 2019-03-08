@@ -15,6 +15,10 @@ class Aids extends Command {
         ]
     }
 
+    description() {
+        return 'A very offensive command'
+    }
+
     init() {
         this.hasAids = []
         this.userNames = {}
