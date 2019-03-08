@@ -10,6 +10,10 @@ class Teams extends Command {
         ]
     }
 
+    description() {
+        return 'Randomize teams'
+    }
+
     process(msg) {
         switch (msg.action) {
             case 'help':
