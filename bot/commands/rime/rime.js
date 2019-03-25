@@ -6,7 +6,7 @@ const jsonStorage = require('../../storage/json')
 class Rime extends Command {
 
     triggers() {
-        return ['addrime']
+        return ['addrime', 'bait', 'baitme', 'addbait']
     }
 
     help() {
@@ -17,7 +17,7 @@ class Rime extends Command {
     }
 
     description() {
-        return 'Rimes ...'
+        return 'Rimes & baits ...'
     }
 
     init() {
@@ -25,31 +25,37 @@ class Rime extends Command {
     }
 
     process(msg) {
+        let type = 'rime'
         switch (msg.trigger) {
+
             case 'addrime':
+            case 'addbait':
+                type = msg.trigger.replace(/^add/, '')
                 const parts = msg.args
                 parts.unshift(msg.action)
-                const newRime = this.addRime(parts.join(' '), msg.user)
-                msg.respond('The rime was added')
+                const newRime = this.addNew(parts.join(' '), msg.user, type)
+                msg.respond('The ' + type + ' was added')
                 msg.respond(newRime.user.username + ':')
                 return msg.respondTTS(newRime.text)
                 break
 
-            case 'rime':
             default:
+                if (msg.trigger.match(/^bait/)) {
+                    type = 'bait'
+                }
                 switch(msg.action) {
                     case 'latest':
-                        const lastRime = this.latestRime()
+                        const lastRime = this.latest(type)
                         if (!lastRime) {
-                            return msg.respond('No rime was found')
+                            return msg.respond('No ' + type + ' was found')
                         }
                         msg.respond(lastRime.user.username + ':')
                         msg.respondTTS(lastRime.text)
                         break
                     default:
-                        const randRime = this.randomRime()
+                        const randRime = this.random(type)
                         if (!randRime) {
-                            return msg.respond('No rime was found')
+                            return msg.respond('No ' + type + ' was found')
                         }
                         msg.respond(randRime.user.username + ':')
                         msg.respondTTS(randRime.text)
@@ -59,34 +65,34 @@ class Rime extends Command {
         }
     }
 
-    randomRime() {
-        const rimes = this.loadRimes()
+    random(type = 'rime') {
+        const rimes = this.loadData(type)
         return !rimes.length ? null : rimes[Math.floor(Math.random() * rimes.length)]
     }
     
-    latestRime() {
-        const rimes = this.loadRimes()
+    latest(type = 'rime') {
+        const rimes = this.loadData(type)
         return !rimes.length ? null : rimes[rimes.length-1]
     }
 
-    addRime(text, user) {
-        const rimes = this.loadRimes()
+    addNew(text, user, type = 'rime') {
+        const rimes = this.loadData(type)
         const rime = {
             text: text,
             date: moment().unix(),
             user: { id: user.id, username: user.username }
         }
         rimes.push(rime)
-        this.saveRimes(rimes)
+        this.saveData(rimes, type)
         return rime
     }
 
-    loadRimes() {
-        return this.jsonStorage.load('rime/rimes.json', [])
+    loadData(type = 'rime') {
+        return this.jsonStorage.load('rime/'+type+'s.json', [])
     }
 
-    saveRimes(rimes) {
-        return this.jsonStorage.save('rime/rimes.json', rimes)
+    saveData(data, type = 'rime') {
+        return this.jsonStorage.save('rime/'+type+'s.json', data)
     }
 }
 
