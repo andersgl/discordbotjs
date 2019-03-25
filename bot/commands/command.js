@@ -36,7 +36,7 @@ class Command {
 
     showHelp() {
         let helpEmbed = new Discord.RichEmbed()
-                            .setTitle(this.constructor.name + ' kommandoer:');
+                            .setTitle(this.constructor.name + ' commands:');
 
         this.help().map(help => {
                 helpEmbed.addField('!' + help.trigger, help.description);
