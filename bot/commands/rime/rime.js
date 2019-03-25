@@ -13,6 +13,8 @@ class Rime extends Command {
         return [
             { trigger: 'rime', description: 'Give me a random rime' },
             { trigger: 'addrime <rime text>', description: 'Add a rime' },
+            { trigger: 'bait', description: 'I want to be baited!' },
+            { trigger: 'addbait <bait text>', description: 'Add a bait' },
         ]
     }
 
@@ -27,7 +29,6 @@ class Rime extends Command {
     process(msg) {
         let type = 'rime'
         switch (msg.trigger) {
-
             case 'addrime':
             case 'addbait':
                 type = msg.trigger.replace(/^add/, '')
@@ -44,6 +45,9 @@ class Rime extends Command {
                     type = 'bait'
                 }
                 switch(msg.action) {
+                    case 'help':
+                        msg.respond(this.showHelp())
+                        break
                     case 'latest':
                         const lastRime = this.latest(type)
                         if (!lastRime) {

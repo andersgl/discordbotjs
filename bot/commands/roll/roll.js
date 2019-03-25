@@ -32,6 +32,9 @@ class Roll extends Command {
 
             case 'roll':
             default:
+                if (msg.action === 'help') {
+                    return msg.respond(this.showHelp())
+                }
                 const random = this.random()
                 if (!this.constest) {
                     msg.respond(msg.msg.author.username + ' rolls ... ' + random)
