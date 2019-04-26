@@ -76,6 +76,9 @@ class Message {
     }
 
     sendEmbeds(embeds) {
+        if (!Array.isArray(embeds)) {
+            embeds = [embeds]
+        }
         const embed = embeds.shift()
         this.respond(embed)
             .then(msg => {

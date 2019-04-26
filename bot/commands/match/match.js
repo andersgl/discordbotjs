@@ -132,12 +132,10 @@ class Match extends Command {
     }
 
     matchesOverview(matches = []) {
-        return matches.map(match => {
-            if (match.date < moment().unix()) {
-                return this.resultMatchEmbed(match)
-            }
-            return this.futureMatchEmbed(match)
-        })
+        if (matches.length === 1) {
+            return matches[0].date < moment().unix() ? this.resultMatchEmbed(matches[0]) : this.futureMatchEmbed(matches[0])
+        }
+        return this.multipleMatchesEmbed(matches)
     }
 
     updateParticipation(id, choice, user) {
@@ -271,6 +269,31 @@ class Match extends Command {
 
     getMatch(id) {
         return this.loadMatches().find(match => match.id === id)
+    }
+
+    multipleMatchesEmbed(matches) {
+        const embeds = []
+        _.chunk(matches, 5).forEach(matchChunk => {
+            const embed = new Discord.RichEmbed().setColor('0xffffff')
+
+            matchChunk.forEach((match, index) => {
+                const yes = match.players.filter(player => player.choice === 'yes')
+                const no = match.players.filter(player => player.choice === 'no')
+                const result = this.parseResult(match.result)
+                embed.addField(
+                    this.formatDate(match.date) + ' vs. ' + match.opponent.toUpperCase() + ' (' + match.id + ')',
+                    'Lineup: ' + (yes.length ? yes.map(player => player.username).join(', ') : 'None')
+                )
+                embed.addField('No', no.length ? no.map(player => player.username).join(', ') : 'None', true)
+                embed.addField('Maps', match.maps.length ? match.maps.join(', ') : '?', true)
+                embed.addField('Result', match.result, true)
+                if ((index+1) < matchChunk.length) {
+                    embed.addBlankField()
+                }
+            })
+            embeds.push(embed)
+        })
+        return embeds
     }
 
     futureMatchEmbed(match) {
