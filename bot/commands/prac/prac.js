@@ -175,7 +175,7 @@ class Prac extends Command {
         this.config.games.forEach(game => {
             embed.addField(
                 game.name.toUpperCase(), 
-                'Aliases: ' +  (game.aliases.length ? game.aliases.join(', ') : '-')
+                'Aliases: ' + game.aliases.join(', ')
             )
         })
         return embed
