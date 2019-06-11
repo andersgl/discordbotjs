@@ -13,6 +13,7 @@ class Prac extends Command {
             { trigger: 'prac no <game?>', description: 'No no no, I can\'t prac' },
             { trigger: 'prac remove <game?>', description: 'Remove your prac entry' },
             { trigger: 'prac help', description: 'Show prac help' },
+            { trigger: 'prac games', description: 'Show available games' },
         ]
     }
 
@@ -43,6 +44,9 @@ class Prac extends Command {
                 break
             case 'help':
                 msg.respond(this.showHelp())
+                break
+            case 'games':
+                msg.respond(this.showGames())
                 break
             default:
                 if (msg.action) {
@@ -164,6 +168,17 @@ class Prac extends Command {
     noPracEntries() {
         const curDate = this.currentDate()
         return this.data[curDate] === undefined || Object.keys(this.data[curDate]) === 0
+    }
+
+    showGames() {
+        const embed = new Discord.RichEmbed().setColor('0xff8000');
+        this.config.games.forEach(game => {
+            embed.addField(
+                game.name.toUpperCase(), 
+                'Aliases: ' +  (game.aliases.length ? game.aliases.join(', ') : '-')
+            )
+        })
+        return embed
     }
 
     aliasToGame(gameAlias) {

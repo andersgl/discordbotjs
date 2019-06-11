@@ -6,6 +6,7 @@
         { "name": "fortnite", "aliases": [] },
         { "name": "pubg", "aliases": ["playerunknownsbattlegrounds"] },
         { "name": "overwatch", "aliases": ["ow"] },
+        { "name": "division 2", "aliases": ["division", "division2"] },
         { "name": "apex", "aliases": ["apexlegends"] }
     ]
 }
