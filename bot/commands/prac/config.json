@@ -1,12 +1,12 @@
 {
     "defaultGame": "cs",
     "games": [
+        { "name": "apex", "aliases": ["apexlegends"] },
         { "name": "cs", "aliases": ["csgo"] },
-        { "name": "lol", "aliases": ["leagueoflegends"] },
-        { "name": "fortnite", "aliases": [] },
-        { "name": "pubg", "aliases": ["playerunknownsbattlegrounds"] },
-        { "name": "overwatch", "aliases": ["ow"] },
         { "name": "division 2", "aliases": ["division", "division2"] },
-        { "name": "apex", "aliases": ["apexlegends"] }
+        { "name": "fortnite", "aliases": [] },
+        { "name": "lol", "aliases": ["leagueoflegends"] },
+        { "name": "overwatch", "aliases": ["ow"] },
+        { "name": "pubg", "aliases": ["playerunknownsbattlegrounds"] }
     ]
 }
