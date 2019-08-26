@@ -2,20 +2,26 @@ const _ = require('lodash')
 
 class Lolz {
     message(message) {
+        if (message.content.toLowerCase().indexOf('erann') >= 0) {
+            message.respond('ERANN FUCKING DOBBEL D')
+        }
+
         if (message.content === 'agge?!') {
-            message.respondTTS(_.fill(Array(5), 'agge').join(' '))
+            return message.respondTTS(_.fill(Array(5), 'agge').join(' '))
         }
 
         if (message.content === 'wing') {
-            message.respondTTS('wong')
+            return message.respondTTS('wong')
         }
 
-        if (message.content.toLowerCase().indexOf('erann') >= 0) {
-            message.respond(this.randomErann())
+        const isItDayOfWeek = message.content.match(/er\sdet\s([a-zA-Z]{3,4}dag)\?/i)
+        if (isItDayOfWeek) {
+            const days = ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag']
+            return message.respond(isItDayOfWeek[1] === days[(new Date).getDay()] ? 'Yeah!' : 'Nope :-(')
         }
     }
 
-    randomErann() {
+    randomErannSong() {
         const tracks = [
             'I Wanna Wake Up With You: https://www.youtube.com/watch?v=Gi6xkDHXjUM',
             'Still Believing: https://www.youtube.com/watch?v=q7coEGBZMUM',
