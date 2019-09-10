@@ -106,7 +106,7 @@ class Prac extends Command {
             })
         }
         this.saveData()
-        return 'You said ' + action
+        return 'You said ' + action + ' to ' + gameName.toUpperCase()
     }
 
     remove(game, user) {
@@ -152,11 +152,11 @@ class Prac extends Command {
             if (!_.isEmpty(entries.yes)) {
                 pracEmbed.addField('😉 Yes', entries.yes.join(', '), true);
             }
-            if (!_.isEmpty(entries.no)) {
-                pracEmbed.addField('😡 No', entries.no.join(', '), true)
-            }
             if (!_.isEmpty(entries.maybe)) {
                 pracEmbed.addField('😰 Maybe', entries.maybe.join(', '), true);
+            }
+            if (!_.isEmpty(entries.no)) {
+                pracEmbed.addField('😡 No', entries.no.join(', '), true)
             }
 
             pracEmbed.addBlankField();

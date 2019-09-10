@@ -7,6 +7,8 @@
         { "name": "fortnite", "aliases": [] },
         { "name": "lol", "aliases": ["leagueoflegends"] },
         { "name": "overwatch", "aliases": ["ow"] },
-        { "name": "pubg", "aliases": ["playerunknownsbattlegrounds"] }
+        { "name": "pubg", "aliases": ["playerunknownsbattlegrounds"] },
+        { "name": "wow", "aliases": ["wowclassic", "worldofwarcraft"] },
+        { "name": "rocket league", "aliases": ["rocket", "raket", "rocketleague"] }
     ]
 }
