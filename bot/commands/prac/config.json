@@ -9,6 +9,6 @@
         { "name": "overwatch", "aliases": ["ow"] },
         { "name": "pubg", "aliases": ["playerunknownsbattlegrounds"] },
         { "name": "wow", "aliases": ["wowclassic", "worldofwarcraft"] },
-        { "name": "rocketleague", "aliases": ["rocket", "raket"] }
+        { "name": "rocket league", "aliases": ["rocket", "raket", "rocketleague"] }
     ]
 }
