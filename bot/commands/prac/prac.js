@@ -141,6 +141,9 @@ class Prac extends Command {
             if (gameName !== null && key !== gameName) {
                 continue
             }
+            if (!pracToday[key] || pracToday[key].length === 0) {
+                continue
+            }
             const entries = { yes: [], no: [], maybe: [] }
 
             pracToday[key].forEach(entry => {
