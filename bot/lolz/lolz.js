@@ -16,8 +16,11 @@ class Lolz {
 
         const isItDayOfWeek = message.content.match(/er\sdet\s([a-zA-Z]{3,4}dag)\?/i)
         if (isItDayOfWeek) {
+            if (isItDayOfWeek[1] === 'fredag') {
+                return
+            }
             const days = ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag']
-            return message.respond(isItDayOfWeek[1] === days[(new Date).getDay()] ? 'Yeah!' : 'Nope :-(')
+            return message.respond(isItDayOfWeek[1] === days[(new Date).getDay()] ? 'Ja det der. Skulle du spørge fra nogen?' : 'Næ :-(')
         }
     }
 
