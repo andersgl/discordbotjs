@@ -3,6 +3,7 @@ const Discord = require('discord.js')
 const _ = require('lodash')
 const Command = require('../command')
 const jsonStorage = require('../../storage/json')
+const hri = require('human-readable-ids').hri
 
 class Match extends Command {
 
@@ -257,7 +258,7 @@ class Match extends Command {
 
     newMatch(date = moment(), opponent = '', maps = []) {
         return {
-            id: this.randomId(),
+            id: hri.random(),
             date: date.unix(),
             opponent: opponent,
             maps: maps,
@@ -383,10 +384,6 @@ class Match extends Command {
 
     formatDate(date) {
         return moment.unix(date).format('YYYY-MM-DD HH:mm')
-    }
-
-    randomId(length = 8) {
-        return Math.random().toString(36).substr(2, length)
     }
 }
 
