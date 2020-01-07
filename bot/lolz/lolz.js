@@ -21,7 +21,7 @@ class Lolz {
         }
 
         if (message.content === '!random') {
-            return message.respondTTS(this.randomizr.random())
+            return message.respondTTS(this.randomizr.random(99))
         }
     }
 

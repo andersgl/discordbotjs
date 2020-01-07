@@ -11,10 +11,10 @@ class RaaRandomizer {
         ]
     }
     
-    random() {
+    random(maxNumber = 999) {
         const prefix = this.prefixes[Math.floor(Math.random() * this.prefixes.length)]
         const member = this.members[Math.floor(Math.random() * this.members.length)]
-        const random = Math.floor(Math.random() * 99) + 0
+        const random = Math.floor(Math.random() * maxNumber) + 0
         return [prefix, member, (random < 10 ? '0' : '') + random.toString()].join('-')
     }
 }
