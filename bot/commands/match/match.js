@@ -3,7 +3,7 @@ const Discord = require('discord.js')
 const _ = require('lodash')
 const Command = require('../command')
 const jsonStorage = require('../../storage/json')
-const hri = require('human-readable-ids').hri
+const raaRandomizr = require('../../utils/raa-randomizer')
 
 class Match extends Command {
 
@@ -258,7 +258,7 @@ class Match extends Command {
 
     newMatch(date = moment(), opponent = '', maps = []) {
         return {
-            id: hri.random(),
+            id: (new raaRandomizr).random(),
             date: date.unix(),
             opponent: opponent,
             maps: maps,

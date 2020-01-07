@@ -1,6 +1,12 @@
 const _ = require('lodash')
+const raaRandomizr = require('../utils/raa-randomizer')
 
 class Lolz {
+
+    constructor() {
+        this.randomizr = new raaRandomizr
+    }
+
     message(message) {
         if (message.content.toLowerCase().indexOf('erann') >= 0) {
             message.respond('ERANN FUCKING DOBBEL D')
@@ -14,10 +20,8 @@ class Lolz {
             return message.respondTTS('wong')
         }
 
-        const isItDayOfWeek = message.content.match(/er\sdet\s([a-zA-Z]{3,4}dag)\?/i)
-        if (isItDayOfWeek) {
-            const days = ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag']
-            return message.respond(isItDayOfWeek[1] === days[(new Date).getDay()] ? 'Yeah!' : 'Nope :-(')
+        if (message.content === '!random') {
+            return message.respondTTS(this.randomizr.random(99))
         }
     }
 
