@@ -81,22 +81,34 @@ class Meyer extends Command {
     diceRollPretty(diceRoll, prefix = 'Du') {
         const sorted = _.sortBy(diceRoll);
 
-        // Check par
-        if (sorted[0] == sorted[1]) {
-            return prefix + ' slog par ' + sorted[0];
-        }
+        const dicemap = {
+            1: '<:dice1:695645520147775570>',
+            2: '<:dice2:695645848100405360>',
+            3: '<:dice3:695645874705006684>',
+            4: '<:dice4:695645875204260091>',
+            5: '<:dice5:695645875074105364>',
+            6: '<:dice6:695645874981961769>'
+        };
+
+        const dice1 = dicemap[sorted[1]];
+        const dice2 = dicemap[sorted[0]];
+
+        // // Check par
+        // if (sorted[0] == sorted[1]) {
+        //     return prefix + ' slog par ' + sorted[0] + dice1 + dice2;
+        // }
 
         // Check meyer
-        if (sorted[0] == 1 && sorted[1] == 2) {
-            return prefix + ' slog Meyer! Gratz';
-        }
+        // if (sorted[0] == 1 && sorted[1] == 2) {
+        //     return prefix + ' slog Meyer! Gratz' + dice1 + dice2;;
+        // }
 
-        // Check lillemeyer
-        if (sorted[0] == 1 && sorted[1] == 3) {
-            return prefix + ' slog lille Meyer!';
-        }
+        // // Check lillemeyer
+        // if (sorted[0] == 1 && sorted[1] == 3) {
+        //     return prefix + ' slog lille Meyer!' + dice1 + dice2;;
+        // }
 
-        return prefix + ' slog ' + sorted[1] + sorted[0];
+        return prefix + ' slog ' + dice1 + dice2;;
     }
 
     lift(msg) {
