@@ -25,6 +25,10 @@ class Meyer extends Command {
     }
 
     process(msg) {
+        switch (msg.trigger) {
+            case 'meyer':
+                break;
+        }
         switch (msg.action) {
             case 'help':
                 msg.respond(this.showHelp());
@@ -36,6 +40,7 @@ class Meyer extends Command {
                 this.roll(msg);
                 break;
             case 'meld':
+            case 'kald':
                 this.report(msg);
                 break;
             case 'videre':
@@ -138,8 +143,10 @@ class Meyer extends Command {
         const lastRoll = this.passedRoll.roll ? this.passedRoll : this.priorRoll;
         if (this.isSuccessfullRoll(lastRoll)) {
             msg.respond(lastRoll.player + ' vandt');
+            this.nextRoll(msg);
         } else {
             msg.respond(msg.author + ' vandt');
+            msg.respond('Din tur ' + lastRoll.player + '!');
         }
         // better than?
     }
@@ -175,7 +182,10 @@ class Meyer extends Command {
             lillemeyer: [3, 1],
             meyer: [2, 1],
         };
-        return names[name] !== undefined ? names[name] : null;
+        if (names[name] !== undefined) {
+            return names[name];
+        }
+        return [parseInt(name[0]), parseInt(name[1])];
     }
 
     report(msg) {
