@@ -12,6 +12,11 @@ class Command {
         return this
     }
 
+    setClient(client) {
+        this.client = client
+        return this
+    }
+
     description() {
         return ''
     }

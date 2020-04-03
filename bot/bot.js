@@ -47,7 +47,6 @@ class Bot {
         const message = new Message(msg, new User(msg.author, this.config))
 
         // Admin commands
-        let matches = null
         if (message.content === '!updateyourself') {
             return this.runUpdate(message)
         } else if (message.isTrigger('enable') && message.action) {
@@ -62,7 +61,8 @@ class Bot {
             if (this.disabledCmds.indexOf(this.triggers[message.trigger]) >= 0) {
                 return // Command is disabled
             }
-            this.commands[this.triggers[message.trigger]].setMsg(message).process(message)
+            this.commands[this.triggers[message.trigger]].setClient(this.client);
+            this.commands[this.triggers[message.trigger]].setMsg(message).process(message);
         } else {
             // Other for lolz stuff?
             this.lolz.message(message)

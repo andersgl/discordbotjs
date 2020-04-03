@@ -3,6 +3,8 @@ const _ = require('lodash/array')
 class Message {
     constructor(msg, user) {
         this.msg = msg
+        this.mentions = msg.mentions;
+        this.author = msg.author;
         this.user = user
         this.content = msg.content
         this.trigger = null
