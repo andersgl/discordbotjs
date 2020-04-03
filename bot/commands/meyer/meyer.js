@@ -134,7 +134,48 @@ class Meyer extends Command {
         }
 
         msg.respond(this.diceRollPretty(this.priorRoll.roll, this.priorRoll.player));
+
+        const lastRoll = this.passedRoll.roll ? this.passedRoll : this.priorRoll;
+        if (this.isSuccessfullRoll(lastRoll)) {
+            msg.respond(lastRoll.player + ' vandt');
+        } else {
+            msg.respond(msg.author + ' vandt');
+        }
         // better than?
+    }
+
+    isSuccessfullRoll(roll) {
+        return this.rollToValue(roll.roll) >= this.rollToValue(this.nameToValue(roll.report));
+    }
+
+    rollToValue(rollValue) {
+        const values = {
+            '11': 71,
+            '22': 72,
+            '33': 73,
+            '44': 74,
+            '55': 75,
+            '66': 76,
+            '31': 80,
+            '21': 90,
+        };
+        const value = _.sortBy(rollValue).join('');
+
+        return values[value] !== undefined ? values[value] : parseInt(value);
+    }
+
+    nameToValue(name) {
+        const names = {
+            par1: '11',
+            par2: '22',
+            par3: '33',
+            par4: '44',
+            par5: '55',
+            par6: '66',
+            lillemeyer: '31',
+            meyer: '21',
+        };
+        return names[name] !== undefined ? names[name] : null;
     }
 
     report(msg) {
