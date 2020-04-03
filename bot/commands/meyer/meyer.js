@@ -166,14 +166,14 @@ class Meyer extends Command {
 
     nameToValue(name) {
         const names = {
-            par1: '11',
-            par2: '22',
-            par3: '33',
-            par4: '44',
-            par5: '55',
-            par6: '66',
-            lillemeyer: '31',
-            meyer: '21',
+            par1: [1, 1],
+            par2: [2, 2],
+            par3: [3, 3],
+            par4: [4, 4],
+            par5: [5, 5],
+            par6: [5, 5],
+            lillemeyer: [3, 1],
+            meyer: [2, 1],
         };
         return names[name] !== undefined ? names[name] : null;
     }
