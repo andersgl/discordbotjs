@@ -8,10 +8,6 @@ class Lolz {
     }
 
     message(message) {
-        if (message.content.toLowerCase().indexOf('erann') >= 0) {
-            message.respond('ERANN FUCKING DOBBEL D')
-        }
-
         if (message.content === 'agge?!') {
             return message.respondTTS(_.fill(Array(5), 'agge').join(' '))
         }
