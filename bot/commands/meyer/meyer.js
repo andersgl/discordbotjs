@@ -143,10 +143,10 @@ class Meyer extends Command {
         const lastRoll = this.passedRoll.roll ? this.passedRoll : this.priorRoll;
         if (this.isSuccessfullRoll(lastRoll)) {
             msg.respond(lastRoll.player + ' vandt');
-            this.nextRoll(msg);
         } else {
             msg.respond(msg.author + ' vandt');
-            msg.respond('Din tur ' + lastRoll.player + '!');
+            this.currentPlayerIndex -= 2;
+            this.nextRoll(msg);
         }
         // better than?
     }
