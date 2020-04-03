@@ -24,12 +24,6 @@ class Meyer extends Command {
     }
 
     process(msg) {
-        console.log(msg.action);
-
-        console.log(this.passedRoll);
-        console.log(this.currentRoll);
-        console.log(this.priorRoll);
-
         switch (msg.action) {
             case 'help':
                 msg.respond(this.showHelp());
@@ -108,7 +102,7 @@ class Meyer extends Command {
         //     return prefix + ' slog lille Meyer!' + dice1 + dice2;;
         // }
 
-        return prefix + ' slog ' + dice1 + dice2;;
+        return dice1 + dice2;
     }
 
     lift(msg) {
@@ -186,8 +180,6 @@ class Meyer extends Command {
         this.currentRoll = this.clearRole();
         this.passedRoll = this.clearRole();
 
-        console.log(this.currentRoll);
-
         this.nextRoll(msg);
     }
 
@@ -216,8 +208,6 @@ class Meyer extends Command {
             msg.respond('Det er ikke din tur.');
             return;
         }
-
-        console.log(this.currentRoll);
 
         if (this.currentRoll.roll) {
             msg.respond('Du har allerede slået. Brug !meyer meld <melding>');
