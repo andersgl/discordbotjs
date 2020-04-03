@@ -11,6 +11,7 @@ class Meyer extends Command {
             { trigger: 'meyer videre', description: 'Send terningerne videre' },
             { trigger: 'meyer ellerderover', description: 'Du slog noget lort, slå igen uden at se terningerne.' },
             { trigger: 'meyer løft', description: 'Løft og se om du er nab.' },
+            { trigger: 'meyer tur', description: 'Se vis tur det er.' },
             { trigger: 'meyer stop', description: 'Stop spille.t' },
         ]
     }
@@ -45,6 +46,9 @@ class Meyer extends Command {
                 break;
             case 'løft':
                 this.lift(msg);
+                break;
+            case 'tur':
+                this.tur(msg);
                 break;
             case 'stop':
                 this.stop(msg);
@@ -103,6 +107,15 @@ class Meyer extends Command {
         // }
 
         return dice1 + dice2;
+    }
+
+    tur(msg) {
+        if (!this.isActive) {
+            msg.respond('Spillet er ikke startet.')
+            return;
+        }
+
+        msg.respond('Det er ' + this.currentRoll.player);
     }
 
     lift(msg) {
