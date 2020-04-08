@@ -134,25 +134,21 @@ class Meyer extends Command {
             return;
         }
 
+        msg.respond(this.diceRollPretty(this.priorRoll.roll, this.priorRoll.player));
         if (this.passedRoll.roll) {
             msg.respond(this.diceRollPretty(this.passedRoll.roll, this.passedRoll.player));
         }
 
-        msg.respond(this.diceRollPretty(this.priorRoll.roll, this.priorRoll.player));
-
-        const lastRoll = this.passedRoll.roll ? this.passedRoll : this.priorRoll;
-        if (this.isSuccessfullRoll(lastRoll)) {
-            msg.respond(lastRoll.player + ' vandt');
+        const originalReport = this.rollToValue(this.nameToValue(this.priorRoll.report));
+        const roll = this.passedRoll.roll ? this.passedRoll : this.priorRoll;
+        const lastRoll = this.rollToValue(roll.roll);
+        if (lastRoll >= originalReport) {
+            msg.respond(roll.player + ' vandt');
+            msg.respond('Din tur ' + this.currentRoll.player);
         } else {
             msg.respond(msg.author + ' vandt');
-            this.currentPlayerIndex -= 2;
-            this.nextRoll(msg);
+            this.prevRoll(msg);
         }
-        // better than?
-    }
-
-    isSuccessfullRoll(roll) {
-        return this.rollToValue(roll.roll) >= this.rollToValue(this.nameToValue(roll.report));
     }
 
     rollToValue(rollValue) {
@@ -247,7 +243,19 @@ class Meyer extends Command {
         this.nextRoll(msg);
     }
 
+    prevRoll(msg) {
+        this.currentPlayerIndex = this.currentPlayerIndex - 1 > 0 ? this.currentPlayerIndex - 1 : this.players.length - 1;
+        this.currentRoll.player = this.players[this.currentPlayerIndex];
+        msg.respond('Din tur ' + this.currentRoll.player + '!');
+    }
+
     nextRoll(msg) {
+        this.currentPlayerIndex = this.currentPlayerIndex + 1 < this.players.length ? this.currentPlayerIndex + 1 : 0;
+        this.currentRoll.player = this.players[this.currentPlayerIndex];
+        msg.respond('Din tur ' + this.currentRoll.player + '!');
+    }
+
+    nextRoll22(msg) {
         this.currentPlayerIndex = this.currentPlayerIndex + 1;
 
         var nextPlayer = this.players[this.currentPlayerIndex];
