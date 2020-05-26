@@ -1,5 +1,4 @@
 class RaaRandomizer {
-
     constructor() {
         this.members = [
             'pede', 'nuller', 'cawer', 'ralla', 'launie', 'agge', 'raaturbo', 'julemanden', 'carlos',
@@ -7,7 +6,7 @@ class RaaRandomizer {
         ]
 
         this.prefixes = [
-            'baiter', 'aids', 'lol', 'tard', 'nab', 'pleb', 'lo2', 'chet', 'ruski',
+            'baiter', 'aids', 'lol', 'tard', 'nab', 'pleb', 'lo2', 'chet', 'ruski', 'clutch', '1337', 'kong', 'lækker', 'skilled',
         ]
     }
     
