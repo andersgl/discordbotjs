@@ -21,12 +21,7 @@ class Lolz {
             return message.respondTTS(this.randomizr.random(99))
         }
         if (message.content.toLowerCase() == 'er det lan?') {
-            const timeDiff = moment('2020-05-29T10:00').unix() - moment().unix();
-            if (timeDiff > 0) {
-                return message.respond(`Nej, der er ${timeDiff} sekunder til lan!`)
-            } else {
-                return message.respond('JADA! https://tenor.com/view/computer-fire-computer-on-fire-fire-computer-gif-12007576')
-            }
+            return message.respond('Nej, der er lang tid til lan')
         }
     }
 
