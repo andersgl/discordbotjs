@@ -6,7 +6,8 @@ class RaaRandomizer {
         ]
 
         this.prefixes = [
-            'baiter', 'aids', 'lol', 'tard', 'nab', 'pleb', 'lo2', 'chet', 'ruski', 'clutch', '1337', 'kong', 'lækker', 'skilled',
+            'baiter', 'lol', 'nab', 'pleb', 'lo2', 'chet', 'ruski', 'clutch', '1337', 'kong', 'hot',
+            'skillz', 'bubber', 'raa', 'putin',
         ]
     }
     
