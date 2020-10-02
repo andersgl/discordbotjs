@@ -17,6 +17,7 @@ class Match extends Command {
             { trigger: 'match add <datetime> <opponent>', description: 'Add a new match (datetime format: 2019-02-29T20:00)' },
             { trigger: 'match remove <hash>', description: 'Remove a match' },
             { trigger: 'match move <hash> <datetime>', description: 'Move a match to a new time (format: 2019-02-29T20:00)' },
+            { trigger: 'match opponent <hash> <opponent>', description: 'Update opponent' },
             { trigger: 'match reset <hash>', description: 'Reset player signups for the match' },
             { trigger: 'match result <hash> <result>', description: 'Set a result for a played match' },
             { trigger: 'match maps <hash> <maps>', description: 'Set map(s) for the maps' },
@@ -63,6 +64,13 @@ class Match extends Command {
             case 'move':
                 if (this.moveMatch(msg.args[0], msg.args[1])) {
                     msg.respond('The match has been moved')
+                    msg.respond(this.futureMatchEmbed(this.getMatch(msg.args[0])))
+                }
+                break
+
+            case 'opponent':
+                if (this.setOpponent(msg.args[0], msg.args.slice(1).join(' '))) {
+                    msg.respond('The opponent has been updated')
                     msg.respond(this.futureMatchEmbed(this.getMatch(msg.args[0])))
                 }
                 break
@@ -209,6 +217,16 @@ class Match extends Command {
             return false
         }
         match.date = date.unix()
+        return this.updateMatch(id, match)
+    }
+
+    setOpponent(id, opponent) {
+        let match = this.getMatch(id)
+        if (!match) {
+            this.msg.respond('Could not find match with ID ' + id)
+            return false
+        }
+        match.opponent = opponent
         return this.updateMatch(id, match)
     }
 
