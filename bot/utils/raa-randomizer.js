@@ -1,7 +1,7 @@
 class RaaRandomizer {
     constructor() {
         this.members = [
-            'pede', 'nuller', 'cawer', 'ralla', 'launie', 'agge', 'raaturbo', 'julemanden', 'carlos',
+            'pede', 'newklir', 'cawer', 'ralla', 'launie', 'agge', 'raaturbo', 'julemanden', 'carlos',
             'darth', 'whitesnake',
         ]
 
