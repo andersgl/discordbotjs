@@ -21,11 +21,12 @@ class Lolz {
             return message.respondTTS(this.randomizr.random(99))
         }
         if (message.content.toLowerCase() == 'er det lan?') {
-            const lanDate = moment('2020-11-13T00:00:00').utcOffset(1);
+            // const lanDate = moment('2020-11-13T00:00:00').utcOffset(1, true);
+            const lanDate = null;
             if (!lanDate) {
                 return message.respond('Nej, der er lang tid til lan');
             }
-            const now = moment().utcOffset(1);
+            const now = moment().utcOffset(1, true);
             if (lanDate.unix() - now.unix() <= 0) {
                 return message.respond('JA! https://tenor.com/view/computer-fire-computer-on-fire-fire-computer-gif-12007576');
             }
