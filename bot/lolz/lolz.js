@@ -9,18 +9,16 @@ class Lolz {
     }
 
     message(message) {
-        if (message.content === 'agge?!') {
+        const content = message.content.toLowerCase();
+        if (content === 'agge?!') {
             return message.respondTTS(_.fill(Array(5), 'agge').join(' '))
         }
 
-        if (message.content === 'wing') {
-            return message.respondTTS('wong')
-        }
-
-        if (message.content === '!random') {
+        if (content === '!random') {
             return message.respondTTS(this.randomizr.random(99))
         }
-        if (message.content.toLowerCase() == 'er det lan?') {
+
+        if (content == 'er det lan?') {
             // const lanDate = moment('2020-11-13T00:00:00').utcOffset(1, true);
             const lanDate = null;
             if (!lanDate) {
@@ -47,6 +45,10 @@ class Lolz {
                 return value + ' ' + (value > 1 ? unit.plural : unit.single);
             }).filter(value => value !== false).join(', ');
             return message.respond(`Nej, der er ${unitDiffs} til lan`);
+        }
+
+        if (content.match(/slack/)) {
+            return message.respond('https://tenor.com/view/slacker-lazy-back-to-the-future-gif-15706066');
         }
     }
 
