@@ -9,7 +9,9 @@
         { "name": "overwatch", "aliases": ["ow"] },
         { "name": "pubg", "aliases": ["playerunknownsbattlegrounds"] },
         { "name": "wow", "aliases": ["wowclassic", "worldofwarcraft"] },
-        { "name": "CoD Warzone", "aliases": ["cod", "warzone"] },
-        { "name": "rocket league", "aliases": ["rocket", "raket", "rocketleague"] }
+        { "name": "cod warzone", "aliases": ["cod", "warzone"] },
+        { "name": "rocket league", "aliases": ["rocket", "raket", "rocketleague"] },
+        { "name": "valheim", "aliases": ["viking", "voldtægt"] },
+        { "name": "among us", "aliases": ["amongus", "sus"] }
     ]
 }
