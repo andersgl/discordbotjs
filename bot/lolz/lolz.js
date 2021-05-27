@@ -51,7 +51,9 @@ class Lolz {
         }
 
         if (content === '!infernotroundpistolwinrate') {
-            return message.respondTTS('100%');
+            message.respond('https://tenor.com/view/100percent-yes-ace-kpop-kang-yuchan-gif-14798177');
+            message.respondTTS('PROCENT');
+            return;
         }
     }
 
