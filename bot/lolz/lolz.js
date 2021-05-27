@@ -46,8 +46,12 @@ class Lolz {
             return message.respond(`Nej, der er ${unitDiffs} til lan`);
         }
 
-        if (content.match(/slack/)) {
+        if (content === '!slack') {
             return message.respond('https://tenor.com/view/slacker-lazy-back-to-the-future-gif-15706066');
+        }
+
+        if (content === '!infernotroundpistolwinrate') {
+            return message.respondTTS('100%');
         }
     }
 
