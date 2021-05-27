@@ -50,7 +50,7 @@ class Lolz {
             return message.respond('https://tenor.com/view/slacker-lazy-back-to-the-future-gif-15706066');
         }
 
-        if (content === '!infernotroundpistolwinrate') {
+        if (content === '!inferno-t-pistol-round-winrate') {
             message.respond('https://tenor.com/view/100percent-yes-ace-kpop-kang-yuchan-gif-14798177');
             message.respondTTS('PROCENT');
             return;
