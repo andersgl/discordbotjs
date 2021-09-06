@@ -19,7 +19,7 @@ class Lolz {
         }
 
         if (content == 'er det lan?') {
-            const lanDate = moment('2021-12-24T011:00:00').utcOffset(1, true);
+            const lanDate = moment('2021-12-24T11:00:00').utcOffset(1, true);
             if (!lanDate) {
                 return message.respond('Nej, der er lang tid til lan');
             }
