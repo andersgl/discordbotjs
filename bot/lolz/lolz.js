@@ -19,9 +19,10 @@ class Lolz {
         }
 
         if (content == 'er det lan?') {
-            const lanDate = moment('2021-11-19T00:00:00').utcOffset(1, true);
+            // const lanDate = moment('2021-11-19T00:00:00').utcOffset(1, true);
+            const lanDate = null;
             if (!lanDate) {
-                return message.respond('Nej, der er lang tid til lan');
+                return message.respond('Nej, lan forsvandt :cry:');
             }
             const now = moment().utcOffset(1, true);
             if (lanDate.unix() - now.unix() <= 0) {
