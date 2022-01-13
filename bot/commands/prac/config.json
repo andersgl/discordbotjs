@@ -12,6 +12,7 @@
         { "name": "cod warzone", "aliases": ["cod", "warzone"] },
         { "name": "rocket league", "aliases": ["rocket", "raket", "rocketleague"] },
         { "name": "valheim", "aliases": ["viking", "voldtægt"] },
-        { "name": "among us", "aliases": ["amongus", "sus"] }
+        { "name": "among us", "aliases": ["amongus", "sus"] },
+        { "name": "zwift", "aliases": ["cykel"] }
     ]
 }
