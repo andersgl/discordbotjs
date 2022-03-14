@@ -19,14 +19,14 @@ class Lolz {
         }
 
         if (content == 'er det lan?') {
-            const lanDate = moment('2022-03-10T22:00:00').utcOffset(1);
-            // const lanDate = null;
+            // const lanDate = moment('2022-03-10T22:00:00').utcOffset(1);
+            const lanDate = null;
             if (!lanDate) {
-                return message.respond('Nej, lan forsvandt :cry:');
+                return message.respond('Nej :cry:');
             }
             const now = moment().utcOffset(1, true);
             if (lanDate.unix() - now.unix() <= 0) {
-                return message.respond('JA! https://tenor.com/view/computer-fire-computer-on-fire-fire-computer-gif-12007576');
+                return message.respond('Ja! LOLOLLOLOLOLOLOL');
             }
 
             const duration = moment.duration(lanDate.diff(now));
