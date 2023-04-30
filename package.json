@@ -4,7 +4,7 @@
     "description": "Discordbotten over alle andre",
     "main": "run.js",
     "dependencies": {
-        "axios": "^0.21.1",
+        "axios": "^0.21.2",
         "cli-table": "^0.3.1",
         "cli-table3": "^0.5.1",
         "command-line-args": "^5.0.2",
