@@ -1,47 +1,41 @@
 const Command = require('../command');
-const _ = require('lodash')
+const Roll = require('./roll');
+const _ = require('lodash');
 
 class Meyer extends Command {
 
     help() {
         return [
             { trigger: 'meyer start @spiller1 @spiller2 osv..', description: 'Start et meyerspil' },
-            { trigger: 'meyer slå', description: 'Slå med terningerne' },
+            { trigger: 'meyer slå|roll', description: 'Slå med terningerne' },
             { trigger: 'meyer meld', description: 'Meld dit slag.' },
             { trigger: 'meyer videre', description: 'Send terningerne videre' },
             { trigger: 'meyer ellerderover', description: 'Du slog noget lort, slå igen uden at se terningerne.' },
             { trigger: 'meyer løft', description: 'Løft og se om du er nab.' },
             { trigger: 'meyer tur', description: 'Se vis tur det er.' },
-            { trigger: 'meyer stop', description: 'Stop spille.t' },
-        ]
+            { trigger: 'meyer stop', description: 'Stop spillet' },
+        ];
     }
 
     description() {
-        return 'Hold kæft Meyer!'
+        return 'Hold kæft Meyer!';
     }
 
     init() {
-        this.reset()
+        this.reset();
     }
 
     process(msg) {
-        switch (msg.trigger) {
-            case 'meyer':
-                break;
-        }
         switch (msg.action) {
             case 'help':
                 msg.respond(this.showHelp());
-                break
+                break;
             case 'start':
                 this.start(msg);
-                break
-            case 'slå':
-                this.roll(msg);
                 break;
-            case 'meld':
-            case 'kald':
-                this.report(msg);
+            case 'slå':
+            case 'roll':
+                this.roll(msg);
                 break;
             case 'videre':
                 this.continue(msg);
@@ -58,10 +52,32 @@ class Meyer extends Command {
             case 'stop':
                 this.stop(msg);
                 break;
+            case 'meld':
+                this.report(msg);
+                break;
             default:
                 msg.respond('Hold kæft Meyer!');
                 break;
         }
+    }
+
+    start(msg) {
+        if (this.isActive) {
+            msg.respond('Spillet er allerede i gang.');
+            return;
+        }
+
+        this.players = msg.mentions.users.filter(mentionUser => !mentionUser.bot).array();
+        if (this.players.length === 0) {
+            msg.respond('Brug meyer start @spiller1 @spiller2 osv..');
+            return;
+        }
+
+        this.isActive = true;
+        this.players = _.shuffle(this.players);
+        this.currentPlayerIndex = 0;
+        this.turns = [];
+        msg.respond('Spillet er igang, ' + this.currentPlayer + ' begynder.')
     }
 
     stop(msg) {
@@ -69,49 +85,32 @@ class Meyer extends Command {
         msg.respond('Spillet er stoppet.')
     }
 
-    diceRoll() {
-        const roll1 = _.random(1, 6);
-        const roll2 = _.random(1, 6);
+    roll(msg) {
+        if (!this.isActive) {
+            this.displayRoll(msg, new Roll());
+            return;
+        }
 
-        // const roll1 = 1;
-        // const roll2 = 2;
+        if (!this.isYourTurn(msg.author)) {
+            msg.respond('Det er ikke din tur.');
+            return;
+        }
 
-        return [
-            roll1, roll2
-        ];
+        if (this.currentRoll.roll) {
+            msg.respond('Du har allerede slået. Brug !meyer meld <melding>');
+            return;
+        }
+
+        this.currentRoll.roll = this.diceRoll();
+
+        msg.dm(msg.author, this.diceRollPretty(this.currentRoll.roll));
     }
 
-    diceRollPretty(diceRoll, prefix = 'Du') {
-        const sorted = _.sortBy(diceRoll);
-
-        const dicemap = {
-            1: '<:dice1:695645520147775570>',
-            2: '<:dice2:695645848100405360>',
-            3: '<:dice3:695645874705006684>',
-            4: '<:dice4:695645875204260091>',
-            5: '<:dice5:695645875074105364>',
-            6: '<:dice6:695645874981961769>'
-        };
-
-        const dice1 = dicemap[sorted[1]];
-        const dice2 = dicemap[sorted[0]];
-
-        // // Check par
-        // if (sorted[0] == sorted[1]) {
-        //     return prefix + ' slog par ' + sorted[0] + dice1 + dice2;
-        // }
-
-        // Check meyer
-        // if (sorted[0] == 1 && sorted[1] == 2) {
-        //     return prefix + ' slog Meyer! Gratz' + dice1 + dice2;;
-        // }
-
-        // // Check lillemeyer
-        // if (sorted[0] == 1 && sorted[1] == 3) {
-        //     return prefix + ' slog lille Meyer!' + dice1 + dice2;;
-        // }
-
-        return dice1 + dice2;
+    displayRoll(msg, roll) {
+        msg.respond(roll.pretty);
+        if (roll.special) {
+            msg.respond(roll.special);
+        }
     }
 
     tur(msg) {
@@ -270,27 +269,6 @@ class Meyer extends Command {
         msg.respond('Din tur ' + this.currentRoll.player + '!');
     }
 
-    roll(msg) {
-        if (!this.isActive) {
-            msg.respond(this.diceRollPretty(this.diceRoll()));
-            return;
-        }
-
-        if (!this.isYourTurn(msg.author)) {
-            msg.respond('Det er ikke din tur.');
-            return;
-        }
-
-        if (this.currentRoll.roll) {
-            msg.respond('Du har allerede slået. Brug !meyer meld <melding>');
-            return;
-        }
-
-        this.currentRoll.roll = this.diceRoll();
-
-        msg.dm(msg.author, this.diceRollPretty(this.currentRoll.roll));
-    }
-
     pass(msg) {
         if (!this.isActive) {
             msg.respond(this.diceRollPretty(this.diceRoll()));
@@ -317,37 +295,6 @@ class Meyer extends Command {
         msg.respond('Eller derover!');
     }
 
-    start(msg) {
-        if (this.isActive) {
-            msg.respond('Spillet er allerede i gang.')
-            return;
-        }
-
-        const playerArgs = msg.args.length > 0 ? msg.args : null;
-
-        if (!playerArgs) {
-            msg.respond('Brug meyer start @spiller1 @spiller2 osv..')
-            return;
-        }
-
-        playerArgs.forEach(playerArg => {
-            let userId = playerArg.replace(/[\\<>@#&!]/g, "");
-
-            msg.mentions.users.forEach(mention => {
-                if (mention.id == userId && !mention.bot) {
-                    this.players[userId] = mention;
-                }
-            });
-        })
-
-        this.isActive = true;
-        this.players = _.shuffle(this.players);
-        this.currentRoll.player = this.players[0];
-        this.currentPlayerIndex = 0;
-
-        msg.respond('Spillet er igang, ' + this.currentRoll.player + ' begynder.')
-    }
-
     clearRole() {
         return {
             roll: null,
@@ -357,16 +304,22 @@ class Meyer extends Command {
     }
 
     isYourTurn(user) {
-        return user.id == this.currentRoll.player.id;
+        return user.id == this.currentPlayer.id;
     }
 
     reset() {
         this.isActive = false;
-        this.priorRoll = this.clearRole();
-        this.passedRoll = this.clearRole();
-        this.currentRoll = this.clearRole();
         this.currentPlayerIndex = null;
-        this.players = {};
+        this.players = [];
+    }
+
+    get currentPlayer() {
+        if (this.currentPlayerIndex === null || !this.players[this.currentPlayerIndex]) {
+            console.log('currentPlayer111');
+            return null;
+        }
+        console.log('currentPlayer222');
+        return this.players[this.currentPlayerIndex];
     }
 }
 
